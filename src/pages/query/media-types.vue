@@ -2,6 +2,7 @@
 import Fuse from 'fuse.js';
 import mimeDb from 'mime-db';
 import { computed, ref } from 'vue';
+import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Input } from '@/components/ui/input';
 
@@ -89,21 +90,10 @@ const handleScroll = (e: Event) => {
     <PageHeader />
     <div class="sticky top-0 z-10 -mx-4 bg-background px-4 pt-2 pb-3 lg:mx-0 lg:px-0">
       <div class="relative">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+        <Icon
+          name="Search01Icon"
           class="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground"
-        >
-          <circle cx="11" cy="11" r="8" />
-          <path d="m21 21-4.3-4.3" />
-        </svg>
+        />
         <Input
           v-model="query"
           placeholder="搜索 MIME 类型或文件后缀，如 application/pdf、.mp4、json..."
@@ -151,21 +141,7 @@ const handleScroll = (e: Event) => {
             class="flex items-center border-b text-sm transition-colors hover:bg-muted/50"
           >
             <div class="flex w-100 shrink-0 items-center gap-2 overflow-hidden px-4 py-3">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-4 shrink-0 text-muted-foreground"
-              >
-                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-              </svg>
+              <Icon name="File01Icon" class="size-4 shrink-0 text-muted-foreground" />
               <span class="truncate font-mono text-xs">{{ virtualRow.mime }}</span>
             </div>
             <div

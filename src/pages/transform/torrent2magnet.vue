@@ -4,6 +4,7 @@ import dayjs from 'dayjs';
 import { remote as parseTorrentRemote, toMagnetURI } from 'parse-torrent';
 import { ref } from 'vue';
 import { toast } from 'vue-sonner';
+import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Button } from '@/components/ui/button';
 
@@ -125,23 +126,8 @@ const handleCopy = async (text: string, index: number) => {
         class="hidden"
         @change="handleFileSelect"
       />
-      <Button size="lg" :disabled="loading" @click="fileInputRef?.click()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="size-4"
-        >
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-          <polyline points="10 17 15 12 10 7" />
-          <line x1="15" x2="3" y1="12" y2="12" />
-        </svg>
+      <Button :disabled="loading" @click="fileInputRef?.click()">
+        <Icon name="Upload01Icon" class="size-4" />
         {{ loading ? '解析中...' : '选择Torrent文件' }}
       </Button>
       <span v-if="torrents.length > 0" class="text-sm text-muted-foreground">
@@ -157,21 +143,7 @@ const handleCopy = async (text: string, index: number) => {
       <div class="mt-6 grid grid-cols-1 gap-6 lg:grid-cols-2">
         <div>
           <div class="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="size-4"
-            >
-              <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-              <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-            </svg>
+            <Icon name="File01Icon" class="size-4" />
             Torrent
           </div>
           <div class="space-y-2 rounded-lg border p-3">
@@ -180,64 +152,20 @@ const handleCopy = async (text: string, index: number) => {
               :key="`file-${t.fileName}`"
               class="flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2 text-sm"
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-4 shrink-0 text-muted-foreground"
-              >
-                <path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z" />
-                <path d="M14 2v4a2 2 0 0 0 2 2h4" />
-              </svg>
+              <Icon name="File01Icon" class="size-4 shrink-0 text-muted-foreground" />
               <span class="min-w-0 flex-1 truncate">{{ t.fileName }}</span>
               <div
                 title="删除"
                 class="inline-flex size-4 shrink-0 cursor-pointer items-center justify-center text-muted-foreground hover:text-destructive"
                 @click="handleRemoveItem(index)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="size-4"
-                >
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                </svg>
+                <Icon name="Delete01Icon" class="size-4" />
               </div>
             </div>
           </div>
           <div class="mt-2">
             <Button variant="outline" size="sm" @click="handleClearAll">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-4"
-              >
-                <path d="M3 6h18" />
-                <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-              </svg>
+              <Icon name="Delete01Icon" class="size-4" />
               清除全部
             </Button>
           </div>
@@ -245,21 +173,7 @@ const handleCopy = async (text: string, index: number) => {
 
         <div>
           <div class="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="size-4"
-            >
-              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
-              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
-            </svg>
+            <Icon name="Link01Icon" class="size-4" />
             Magnet
           </div>
           <div class="space-y-2 rounded-lg border p-3">
@@ -273,37 +187,8 @@ const handleCopy = async (text: string, index: number) => {
                 class="inline-flex size-4 shrink-0 cursor-pointer items-center justify-center text-muted-foreground hover:text-foreground"
                 @click="handleCopy(t.magnet, index)"
               >
-                <svg
-                  v-if="copiedIndex === index"
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="size-4 text-green-600"
-                >
-                  <polyline points="20 6 9 17 4 12" />
-                </svg>
-                <svg
-                  v-else
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  class="size-4"
-                >
-                  <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                  <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                </svg>
+                <Icon v-if="copiedIndex === index" name="CheckIcon" class="size-4 text-green-600" />
+                <Icon v-else name="Copy01Icon" class="size-4" />
               </div>
               <span class="min-w-0 flex-1 truncate text-sm">{{ t.magnet }}</span>
             </div>
@@ -311,40 +196,11 @@ const handleCopy = async (text: string, index: number) => {
 
           <div class="mt-3 flex items-center gap-3">
             <Button variant="outline" size="sm" @click="handleExportToFile">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-4"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                <polyline points="7 10 12 15 17 10" />
-                <line x1="12" x2="12" y1="15" y2="3" />
-              </svg>
+              <Icon name="Download01Icon" class="size-4" />
               导出内容到文件
             </Button>
             <Button variant="outline" size="sm" @click="handleCopyAll">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="size-4"
-              >
-                <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-              </svg>
+              <Icon name="Copy01Icon" class="size-4" />
               全部复制到剪切版
             </Button>
           </div>

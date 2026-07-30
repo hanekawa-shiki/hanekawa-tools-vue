@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
+import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -146,26 +147,7 @@ const handleCopy = async (label: string, value: string) => {
       <div class="space-y-4">
         <Card class="p-4">
           <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="size-4"
-            >
-              <circle cx="13.5" cy="6.5" r=".5" fill="currentColor" />
-              <circle cx="17.5" cy="10.5" r=".5" fill="currentColor" />
-              <circle cx="8.5" cy="7.5" r=".5" fill="currentColor" />
-              <circle cx="6.5" cy="12.5" r=".5" fill="currentColor" />
-              <path
-                d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"
-              />
-            </svg>
+            <Icon name="ColorPickerIcon" class="size-4" />
             取色器
           </div>
           <div class="mt-3 flex flex-col items-center gap-4 sm:flex-row sm:items-start">
@@ -254,21 +236,7 @@ const handleCopy = async (label: string, value: string) => {
       <div>
         <Card class="p-4">
           <div class="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              class="size-4"
-            >
-              <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-            </svg>
+            <Icon name="Copy01Icon" class="size-4" />
             颜色代码
           </div>
           <div class="mt-3 space-y-3">
@@ -302,37 +270,12 @@ const handleCopy = async (label: string, value: string) => {
                   class="inline-flex shrink-0 cursor-pointer items-center justify-center text-muted-foreground hover:text-foreground"
                   @click="handleCopy(item.label, item.value)"
                 >
-                  <svg
+                  <Icon
                     v-if="copiedField === item.label"
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    name="CheckIcon"
                     class="size-4 text-green-600"
-                  >
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                  <svg
-                    v-else
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    class="size-4"
-                  >
-                    <rect width="14" height="14" x="8" y="8" rx="2" ry="2" />
-                    <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-                  </svg>
+                  />
+                  <Icon v-else name="Copy01Icon" class="size-4" />
                 </button>
               </div>
             </div>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import MonthPicker from '@/components/month-picker.vue';
 import { Button } from '@/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -26,7 +26,7 @@ const emit = defineEmits<{
 
 const open = ref(false);
 
-const displayLabel = `${props.year} 年 · ${MONTH_NAMES[props.month]}`;
+const displayLabel = computed(() => `${props.year} 年 · ${MONTH_NAMES[props.month]}`);
 
 const handleMonthSelect = (date: Date) => {
   emit('monthSelect', date);
@@ -37,9 +37,10 @@ const handleMonthSelect = (date: Date) => {
 <template>
   <div class="flex flex-wrap items-center justify-center gap-2">
     <div class="grid grid-cols-2 gap-2 lg:flex lg:flex-wrap lg:items-center lg:justify-center">
+      <!-- 年月选择器（MonthPicker + Popover） -->
       <Popover v-model:open="open">
         <PopoverTrigger as-child>
-          <Button variant="outline" size="sm" class="w-full gap-1.5 font-medium lg:w-auto">
+          <Button variant="outline" class="w-full gap-1.5 font-medium lg:w-auto">
             {{ displayLabel }}
           </Button>
         </PopoverTrigger>
@@ -51,6 +52,7 @@ const handleMonthSelect = (date: Date) => {
         </PopoverContent>
       </Popover>
 
+      <!-- 一周起始日选择 -->
       <Select
         :model-value="String(weekStart)"
         @update:model-value="(v) => emit('weekStartChange', String(v))"

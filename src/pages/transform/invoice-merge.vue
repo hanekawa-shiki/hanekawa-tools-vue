@@ -2,6 +2,7 @@
 import { PDFDocument } from 'pdf-lib';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
+import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Button } from '@/components/ui/button';
 import {
@@ -20,8 +21,8 @@ const MARGIN = 12;
 const MAX_FILES = 50;
 
 const PER_PAGE_CONFIG = [
-  { label: '每页 4 张（2×2）', value: '4' },
-  { label: '每页 2 张（上下）', value: '2' },
+  { label: '每页 4 张（2×2）', value: 4 },
+  { label: '每页 2 张（上下）', value: 2 },
 ];
 
 interface InvoicePage {
@@ -237,35 +238,12 @@ const handleExport = async () => {
         class="hidden"
         @change="handleFileSelect"
       />
-      <Button size="lg" :disabled="loading" @click="fileInputRef?.click()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="16"
-          height="16"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          class="size-4"
-        >
-          <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
-          <polyline points="10 17 15 12 10 7" />
-          <line x1="15" x2="3" y1="12" y2="12" />
-        </svg>
+      <Button :disabled="loading" @click="fileInputRef?.click()">
+        <Icon name="FileInputIcon" class="size-4" />
         {{ loading ? '读取中...' : '选择发票 PDF' }}
       </Button>
 
-      <Select
-        :model-value="String(perPage)"
-        class="w-40"
-        @update:model-value="
-          (v) => {
-            if (v) perPage = Number(v) as 2 | 4;
-          }
-        "
-      >
+      <Select v-model="perPage" class="w-40">
         <SelectTrigger>
           <SelectValue />
         </SelectTrigger>
@@ -281,41 +259,11 @@ const handleExport = async () => {
           {{ invoices.length }} 张发票，共 {{ totalPages }} 页
         </span>
         <Button variant="outline" size="sm" @click="handleClearAll">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="size-4"
-          >
-            <path d="M3 6h18" />
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-          </svg>
+          <Icon name="Delete01Icon" class="size-4" />
           清除全部
         </Button>
         <Button size="sm" :disabled="exporting" @click="handleExport">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="size-4"
-          >
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" x2="12" y1="15" y2="3" />
-          </svg>
+          <Icon name="Download01Icon" class="size-4" />
           {{ exporting ? '导出中...' : '导出合并 PDF' }}
         </Button>
       </template>
@@ -353,21 +301,7 @@ const handleExport = async () => {
                 class="absolute top-1 right-1 z-10 inline-flex size-5 cursor-pointer items-center justify-center rounded-sm bg-background/80 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 hover:text-destructive"
                 @click="handleRemoveItem((pageIdx - 1) * perPage + slotIdx)"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                >
-                  <path d="M3 6h18" />
-                  <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6" />
-                  <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2" />
-                </svg>
+                <Icon name="Delete01Icon" class="size-3.5" />
               </div>
               <iframe
                 v-if="inv.previewDataUrl"
@@ -388,24 +322,7 @@ const handleExport = async () => {
       v-if="invoices.length === 0 && !loading"
       class="mt-16 flex flex-col items-center justify-center text-muted-foreground"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        width="48"
-        height="48"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="mb-4 size-12 opacity-40"
-      >
-        <path
-          d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"
-        />
-        <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
-        <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
-      </svg>
+      <Icon name="Layers01Icon" class="mb-4 size-12 opacity-40" />
       <p class="text-sm">选择多个发票 PDF 文件进行合并</p>
       <p class="mt-1 text-xs text-muted-foreground/70">
         仅提取每个 PDF 的第一页，自动缩放排列到 A4 页面上
