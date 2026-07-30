@@ -223,7 +223,9 @@ const handleCopy = async (label: string, value: string) => {
                     :max="100"
                     class="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-foreground"
                   />
-                  <span class="w-10 text-right text-sm text-muted-foreground tabular-nums">{{ alpha }}%</span>
+                  <span class="w-10 text-right text-sm text-muted-foreground tabular-nums">
+                    {{ alpha }}%
+                  </span>
                 </div>
               </div>
             </div>

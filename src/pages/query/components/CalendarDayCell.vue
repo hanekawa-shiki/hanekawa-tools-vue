@@ -47,17 +47,23 @@ const handleSelect = (cell: CalendarCell, year: number, month: number) => {
       v-if="cell.isWorkday"
       class="absolute top-0 left-0 flex size-3.5 items-center justify-center rounded-tl rounded-br bg-gray-200 text-[7px] leading-none font-bold text-gray-500 dark:bg-gray-700 dark:text-gray-300"
       :class="cell.isSelected ? 'bg-primary-foreground text-primary' : ''"
-    >班</span>
+    >
+      班
+    </span>
     <span
       v-else-if="cell.isHoliday"
       class="absolute top-0 left-0 flex size-3.5 items-center justify-center rounded-tl rounded-br bg-red-100 text-[7px] leading-none font-bold text-red-700 dark:bg-red-900 dark:text-red-300"
       :class="cell.isSelected ? 'bg-primary-foreground text-primary' : ''"
-    >休</span>
+    >
+      休
+    </span>
     <span
       v-else-if="cell.isWeekend"
       class="absolute top-0 left-0 flex size-3.5 items-center justify-center rounded-tl rounded-br bg-red-50 text-[7px] leading-none font-bold text-red-400 dark:bg-red-950 dark:text-red-400"
       :class="cell.isSelected ? 'bg-primary-foreground text-primary' : ''"
-    >休</span>
+    >
+      休
+    </span>
 
     <!-- Day number -->
     <span
@@ -69,23 +75,31 @@ const handleSelect = (cell: CalendarCell, year: number, month: number) => {
           ? 'font-bold text-red-500 dark:text-red-400'
           : '',
       ]"
-    >{{ cell.day }}</span>
+    >
+      {{ cell.day }}
+    </span>
 
     <!-- Holiday/Solar term/Lunar -->
     <span
       v-if="cell.showHolidayName"
       class="text-[10px] leading-tight"
       :class="cell.isSelected ? 'text-primary-foreground' : 'text-red-500 dark:text-red-400'"
-    >{{ cell.holidayName }}</span>
+    >
+      {{ cell.holidayName }}
+    </span>
     <span
       v-else-if="cell.solarTerm"
       class="text-[10px] leading-tight"
       :class="cell.isSelected ? 'text-primary-foreground' : 'text-green-600 dark:text-green-400'"
-    >{{ cell.solarTerm }}</span>
+    >
+      {{ cell.solarTerm }}
+    </span>
     <span
       v-else
       class="text-[10px] leading-tight"
       :class="cell.isSelected ? 'text-primary-foreground' : 'text-muted-foreground'"
-    >{{ cell.lunar }}</span>
+    >
+      {{ cell.lunar }}
+    </span>
   </div>
 </template>

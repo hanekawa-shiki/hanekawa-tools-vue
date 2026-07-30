@@ -31,7 +31,9 @@ defineProps<{
             return isHoliday || (isWeekend && !isWorkday) ? 'text-red-500 dark:text-red-400' : '';
           })()
         "
-      >{{ dayjs(selectedDate).date() }}</span>
+      >
+        {{ dayjs(selectedDate).date() }}
+      </span>
       <div class="flex flex-col">
         <span class="text-sm text-muted-foreground">
           {{ dayjs(selectedDate).year() }}年{{ dayjs(selectedDate).month() + 1 }}月
