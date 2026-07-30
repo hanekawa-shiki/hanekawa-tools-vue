@@ -314,13 +314,18 @@ const closePreview = () => {
               >
                 <Icon name="Delete01Icon" class="size-3.5" />
               </div>
-              <iframe
-                v-if="inv.previewDataUrl"
-                :src="inv.previewDataUrl"
-                class="h-48 w-full flex-1 cursor-pointer border-0"
-                :title="inv.fileName"
+              <div
+                class="relative h-48 w-full flex-1 cursor-pointer"
                 @click="openPreview(inv.previewDataUrl!)"
-              ></iframe>
+              >
+                <iframe
+                  v-if="inv.previewDataUrl"
+                  :src="inv.previewDataUrl"
+                  class="pointer-events-none size-full border-0"
+                  :title="inv.fileName"
+                ></iframe>
+                <div class="absolute inset-0"></div>
+              </div>
               <span class="mt-1 w-full truncate text-center text-xs text-muted-foreground">{{
                 inv.fileName
               }}</span>
