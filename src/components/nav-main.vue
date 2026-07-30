@@ -4,7 +4,6 @@ import { ChevronRightIcon } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
-import Icon from '@/components/icon.vue';
 import Collapsible from '@/components/ui/collapsible/Collapsible.vue';
 import CollapsibleContent from '@/components/ui/collapsible/CollapsibleContent.vue';
 import CollapsibleTrigger from '@/components/ui/collapsible/CollapsibleTrigger.vue';

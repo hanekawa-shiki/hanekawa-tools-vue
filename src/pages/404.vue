@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import Icon from '@/components/icon.vue';
 import { useTheme } from '@/components/theme-provider.vue';
 
 const router = useRouter();

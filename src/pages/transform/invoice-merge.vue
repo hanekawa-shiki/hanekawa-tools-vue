@@ -2,7 +2,6 @@
 import { PDFDocument } from 'pdf-lib';
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
-import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Button } from '@/components/ui/button';
 import {

@@ -4,6 +4,7 @@
   "version": "2.0.0",
   "private": true,
   "packageManager": "pnpm@10.34.5",
+  "homepage": "https://github.com/hanekawa-shiki/hanekawa-tools-vue",
   "engines": {
     "node": ">=24",
     "pnpm": "10.34.5"

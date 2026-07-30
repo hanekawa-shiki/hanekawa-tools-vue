@@ -2,7 +2,6 @@
 import Fuse from 'fuse.js';
 import mimeDb from 'mime-db';
 import { computed, ref } from 'vue';
-import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Input } from '@/components/ui/input';
 

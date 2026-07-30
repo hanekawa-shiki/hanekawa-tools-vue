@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
 import avatarImg from '@/assest/avatar.jpeg';
-import Icon from '@/components/icon.vue';
 import ModeToggle from '@/components/mode-toggle.vue';
 import NavMain from '@/components/nav-main.vue';
 import { Separator } from '@/components/ui/separator';
@@ -15,6 +14,7 @@ import {
   SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { getRouteMenuItems } from '@/composables/use-auto-routes';
+import pkg from '../../package.json';
 
 const router = useRouter();
 const routeMenuItems = computed(() => getRouteMenuItems());
@@ -59,7 +59,7 @@ const routeMenuItems = computed(() => getRouteMenuItems());
           </div>
           <div class="flex items-center gap-2">
             <a
-              href="https://github.com/hanekawa-shiki/hanekawa-tools"
+              :href="pkg.homepage"
               target="_blank"
               rel="noopener noreferrer"
               class="inline-block transition-colors hover:text-gray-500"

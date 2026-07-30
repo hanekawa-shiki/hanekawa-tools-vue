@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
-import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';

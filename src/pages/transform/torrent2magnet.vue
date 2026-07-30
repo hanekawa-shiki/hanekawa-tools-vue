@@ -4,7 +4,6 @@ import dayjs from 'dayjs';
 import { remote as parseTorrentRemote, toMagnetURI } from 'parse-torrent';
 import { ref } from 'vue';
 import { toast } from 'vue-sonner';
-import Icon from '@/components/icon.vue';
 import PageHeader from '@/components/page-header.vue';
 import { Button } from '@/components/ui/button';
 

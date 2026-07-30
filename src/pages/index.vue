@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue';
-import Icon from '@/components/icon.vue';
 import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { pageMeta } from '@/router/config';
 

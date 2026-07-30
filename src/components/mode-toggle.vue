@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import Icon from '@/components/icon.vue';
 import { useTheme } from '@/components/theme-provider.vue';
 import {
   DropdownMenu,

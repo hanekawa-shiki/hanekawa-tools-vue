@@ -7,6 +7,7 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
+import Icon from './components/icon.vue';
 import 'dayjs/locale/zh-cn';
 import './index.css';
 
@@ -51,4 +52,5 @@ const router = createRouter({
 
 const app = createApp(App);
 app.use(router);
+app.component('Icon', Icon);
 app.mount('#app');
