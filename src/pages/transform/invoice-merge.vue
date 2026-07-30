@@ -236,7 +236,7 @@ const handleExport = async () => {
         multiple
         class="hidden"
         @change="handleFileSelect"
-      >
+      />
       <Button size="lg" :disabled="loading" @click="fileInputRef?.click()">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -374,7 +374,7 @@ const handleExport = async () => {
                 :src="inv.previewDataUrl"
                 class="pointer-events-none h-48 w-full flex-1 border-0"
                 :title="inv.fileName"
-              />
+              ></iframe>
               <span class="mt-1 w-full truncate text-center text-xs text-muted-foreground">{{
                 inv.fileName
               }}</span>
@@ -406,9 +406,7 @@ const handleExport = async () => {
         <path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65" />
         <path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65" />
       </svg>
-      <p class="text-sm">
-        选择多个发票 PDF 文件进行合并
-      </p>
+      <p class="text-sm">选择多个发票 PDF 文件进行合并</p>
       <p class="mt-1 text-xs text-muted-foreground/70">
         仅提取每个 PDF 的第一页，自动缩放排列到 A4 页面上
       </p>

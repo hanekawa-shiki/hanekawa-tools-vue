@@ -67,9 +67,7 @@ const rightData = computed(() => prices.value.slice(midpoint.value));
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead class="h-12 text-left font-medium whitespace-nowrap">
-                  省/市
-                </TableHead>
+                <TableHead class="h-12 text-left font-medium whitespace-nowrap"> 省/市 </TableHead>
                 <TableHead class="h-12 text-right font-medium whitespace-nowrap">
                   92#汽油
                 </TableHead>
@@ -107,9 +105,7 @@ const rightData = computed(() => prices.value.slice(midpoint.value));
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead class="h-12 text-left font-medium whitespace-nowrap">
-                  省/市
-                </TableHead>
+                <TableHead class="h-12 text-left font-medium whitespace-nowrap"> 省/市 </TableHead>
                 <TableHead class="h-12 text-right font-medium whitespace-nowrap">
                   92#汽油
                 </TableHead>
@@ -145,9 +141,7 @@ const rightData = computed(() => prices.value.slice(midpoint.value));
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead class="h-12 text-left font-medium whitespace-nowrap">
-                  省/市
-                </TableHead>
+                <TableHead class="h-12 text-left font-medium whitespace-nowrap"> 省/市 </TableHead>
                 <TableHead class="h-12 text-right font-medium whitespace-nowrap">
                   92#汽油
                 </TableHead>

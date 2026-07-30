@@ -112,9 +112,7 @@ const handleScroll = (e: Event) => {
       </div>
       <div class="mt-2 text-xs text-muted-foreground">
         共 {{ ALL_ITEMS.length }} 种媒体类型
-        <template v-if="query.trim() !== ''">
-          ，匹配 {{ results.length }} 条
-        </template>
+        <template v-if="query.trim() !== ''"> ，匹配 {{ results.length }} 条 </template>
       </div>
     </div>
 
@@ -132,21 +130,11 @@ const handleScroll = (e: Event) => {
         <div
           class="sticky top-0 z-10 flex items-center border-b bg-muted/80 text-xs font-medium text-muted-foreground backdrop-blur-sm"
         >
-          <div class="w-100 shrink-0 px-4 py-2">
-            MIME 类型
-          </div>
-          <div class="hidden w-35 shrink-0 px-4 py-2 sm:block">
-            文件后缀
-          </div>
-          <div class="hidden w-20 shrink-0 px-4 py-2 md:block">
-            来源
-          </div>
-          <div class="hidden w-20 shrink-0 px-4 py-2 lg:block">
-            字符集
-          </div>
-          <div class="hidden w-20 shrink-0 px-4 py-2 lg:block">
-            可压缩
-          </div>
+          <div class="w-100 shrink-0 px-4 py-2">MIME 类型</div>
+          <div class="hidden w-35 shrink-0 px-4 py-2 sm:block">文件后缀</div>
+          <div class="hidden w-20 shrink-0 px-4 py-2 md:block">来源</div>
+          <div class="hidden w-20 shrink-0 px-4 py-2 lg:block">字符集</div>
+          <div class="hidden w-20 shrink-0 px-4 py-2 lg:block">可压缩</div>
         </div>
         <div :style="{ height: `${totalHeight}px`, width: '100%', position: 'relative' }">
           <div

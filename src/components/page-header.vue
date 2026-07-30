@@ -45,6 +45,6 @@ onUnmounted(() => {
         {{ meta.description }}
       </p>
     </div>
-    <div ref="sentinelRef" class="h-0" />
+    <div ref="sentinelRef" class="h-0"></div>
   </template>
 </template>

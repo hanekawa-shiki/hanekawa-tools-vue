@@ -58,5 +58,5 @@ watch(needRefresh, (val) => {
 </script>
 
 <template>
-  <div />
+  <div></div>
 </template>

@@ -12,6 +12,6 @@ const props = defineProps<{
     data-slot="card-footer"
     :class="cn('flex items-center rounded-b-xl px-(--card-spacing) [.border-t]:pt-6', props.class)"
   >
-    <slot />
+    <slot></slot>
   </div>
 </template>

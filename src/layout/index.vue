@@ -32,7 +32,7 @@ const routeMenuItems = computed(() => getRouteMenuItems());
             :src="avatarImg"
             alt="avatar"
             class="aspect-square w-full rounded-full object-cover shadow-md"
-          >
+          />
           <div class="flex flex-col items-center text-center leading-tight">
             <span class="text-sm font-semibold">Hanekawa Tools</span>
             <span

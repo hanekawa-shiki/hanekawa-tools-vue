@@ -10,6 +10,6 @@ const forwarded = useForwardPropsEmits(props, emits);
 
 <template>
   <CollapsibleRoot v-slot="slotProps" data-slot="collapsible" v-bind="forwarded">
-    <slot v-bind="slotProps" />
+    <slot v-bind="slotProps"></slot>
   </CollapsibleRoot>
 </template>

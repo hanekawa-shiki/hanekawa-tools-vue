@@ -21,7 +21,7 @@
     <span class="flex items-center gap-1">
       <span
         class="inline-block size-3 rounded-sm bg-green-100 text-green-600 dark:bg-green-950 dark:text-green-400"
-      />
+      ></span>
       节气
     </span>
   </div>

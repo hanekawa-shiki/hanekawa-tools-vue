@@ -124,7 +124,7 @@ const handleCopy = async (text: string, index: number) => {
         multiple
         class="hidden"
         @change="handleFileSelect"
-      >
+      />
       <Button size="lg" :disabled="loading" @click="fileInputRef?.click()">
         <svg
           xmlns="http://www.w3.org/2000/svg"

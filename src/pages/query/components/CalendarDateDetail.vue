@@ -40,9 +40,7 @@ defineProps<{
     </div>
 
     <div class="rounded-lg bg-muted/50 p-3">
-      <div class="mb-1 text-xs font-medium text-muted-foreground">
-        农历
-      </div>
+      <div class="mb-1 text-xs font-medium text-muted-foreground">农历</div>
       <div class="text-sm font-medium">
         {{ getLunarFullInfo(selectedDate).fullText }}
       </div>
@@ -52,9 +50,7 @@ defineProps<{
     </div>
 
     <div class="rounded-lg bg-muted/50 p-3">
-      <div class="mb-1 text-xs font-medium text-muted-foreground">
-        周数
-      </div>
+      <div class="mb-1 text-xs font-medium text-muted-foreground">周数</div>
       <div class="text-sm font-medium">
         当前为{{ dayjs(selectedDate).year() }}年的第{{ getWeekOfYear(selectedDate) }}周
       </div>
@@ -73,9 +69,7 @@ defineProps<{
       "
       class="rounded-lg bg-red-50 p-3 dark:bg-red-950"
     >
-      <div class="mb-1 text-xs font-medium text-red-400">
-        节假日
-      </div>
+      <div class="mb-1 text-xs font-medium text-red-400">节假日</div>
       <div class="text-sm font-medium text-red-600 dark:text-red-400">
         {{
           getHolidayInfo(
@@ -91,9 +85,7 @@ defineProps<{
       v-if="getLunarFullInfo(selectedDate).solarTerm"
       class="rounded-lg bg-green-50 p-3 dark:bg-green-950"
     >
-      <div class="mb-1 text-xs font-medium text-green-600 dark:text-green-400">
-        节气
-      </div>
+      <div class="mb-1 text-xs font-medium text-green-600 dark:text-green-400">节气</div>
       <div class="text-sm font-medium text-green-700 dark:text-green-400">
         {{ getLunarFullInfo(selectedDate).solarTerm }}
       </div>
@@ -112,9 +104,7 @@ defineProps<{
       "
       class="rounded-lg bg-gray-50 p-3 dark:bg-gray-900"
     >
-      <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">
-        调休上班
-      </div>
+      <div class="mb-1 text-xs font-medium text-gray-600 dark:text-gray-400">调休上班</div>
       <div class="text-sm font-medium text-gray-600 dark:text-gray-400">
         {{
           getHolidayInfo(

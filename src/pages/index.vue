@@ -31,12 +31,8 @@ const tools = computed<ToolItem[]>(() => {
 <template>
   <div class="flex flex-1 flex-col gap-6 pt-4">
     <div>
-      <h1 class="text-2xl font-bold tracking-tight">
-        工具列表
-      </h1>
-      <p class="text-sm text-muted-foreground">
-        请选择要使用的工具
-      </p>
+      <h1 class="text-2xl font-bold tracking-tight">工具列表</h1>
+      <p class="text-sm text-muted-foreground">请选择要使用的工具</p>
     </div>
     <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       <router-link v-for="tool in tools" :key="tool.url" :to="tool.url" class="block">

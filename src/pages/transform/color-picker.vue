@@ -174,7 +174,7 @@ const handleCopy = async (label: string, value: string) => {
               :value="normalizedHex"
               class="size-40 cursor-pointer rounded-lg border-0 p-0"
               @input="hexInput = ($event.target as HTMLInputElement).value.toUpperCase()"
-            >
+            />
             <div class="flex flex-1 flex-col gap-3">
               <div class="relative h-20 w-full overflow-hidden rounded-lg border shadow-sm">
                 <div
@@ -192,13 +192,13 @@ const handleCopy = async (label: string, value: string) => {
                       6px -6px,
                       -6px 0;
                   "
-                />
+                ></div>
                 <div
                   class="absolute inset-0"
                   :style="{
                     backgroundColor: `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${alphaDecimal})`,
                   }"
-                />
+                ></div>
               </div>
               <div class="flex items-center gap-2">
                 <span class="w-10 text-sm font-medium text-muted-foreground">HEX</span>
@@ -222,7 +222,7 @@ const handleCopy = async (label: string, value: string) => {
                     :min="0"
                     :max="100"
                     class="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-muted accent-foreground"
-                  >
+                  />
                   <span class="w-10 text-right text-sm text-muted-foreground tabular-nums">{{ alpha }}%</span>
                 </div>
               </div>
@@ -230,9 +230,7 @@ const handleCopy = async (label: string, value: string) => {
           </div>
         </Card>
         <Card class="p-4">
-          <div class="text-sm font-medium text-muted-foreground">
-            常用颜色
-          </div>
+          <div class="text-sm font-medium text-muted-foreground">常用颜色</div>
           <div class="mt-3 flex flex-wrap gap-2">
             <button
               v-for="color in PRESET_COLORS"
@@ -247,7 +245,7 @@ const handleCopy = async (label: string, value: string) => {
               :style="{ backgroundColor: color }"
               :title="color"
               @click="hexInput = color.toUpperCase()"
-            />
+            ></button>
           </div>
         </Card>
       </div>

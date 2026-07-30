@@ -65,9 +65,7 @@ const handleMonthSelect = (date: Date) => {
         </SelectContent>
       </Select>
 
-      <Button variant="outline" @click="emit('goToday')">
-        回到今天
-      </Button>
+      <Button variant="outline" @click="emit('goToday')"> 回到今天 </Button>
     </div>
   </div>
 </template>

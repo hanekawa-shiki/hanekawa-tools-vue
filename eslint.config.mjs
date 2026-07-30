@@ -12,7 +12,7 @@ export default antfu({
     markdown: 'prettier',
   },
   typescript: {
-    tsconfigPath: 'tsconfig.app.json',
+    tsconfigPath: 'tsconfig.json',
   },
   settings: {
     tailwindcss: {
@@ -31,6 +31,18 @@ export default antfu({
     'tailwindcss/no-custom-classname': 'off',
     'tailwindcss/no-contradicting-classname': 'error',
     'tailwindcss/no-unnecessary-arbitrary-value': 'warn',
+    'vue/html-self-closing': [
+      'error',
+      {
+        html: {
+          void: 'always',
+          normal: 'never',
+          component: 'always',
+        },
+      },
+    ],
+    'vue/singleline-html-element-content-newline': 'off',
+    // 强制所有 if/else/for/while 使用大括号
     'antfu/curly': 'off',
     curly: ['error', 'all'],
   },

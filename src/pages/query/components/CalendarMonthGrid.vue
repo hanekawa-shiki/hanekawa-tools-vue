@@ -46,7 +46,7 @@ const totalCells = computed(() => adjustedStart.value + daysInMonth.value);
     </div>
     <div class="grid grid-cols-7 gap-px">
       <template v-for="idx in totalCells" :key="idx">
-        <div v-if="idx <= adjustedStart" class="min-h-13" />
+        <div v-if="idx <= adjustedStart" class="min-h-13"></div>
         <CalendarDayCell
           v-else
           :cell="cells[idx - adjustedStart - 1]"

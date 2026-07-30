@@ -27,7 +27,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
     :class="cn('flex w-(--sidebar-width) flex-col bg-sidebar text-sidebar-foreground', props.class)"
     v-bind="$attrs"
   >
-    <slot />
+    <slot></slot>
   </div>
 
   <Sheet v-else-if="isMobile" :open="openMobile" v-bind="$attrs" @update:open="setOpenMobile">
@@ -46,7 +46,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
         <SheetDescription>Displays the mobile sidebar.</SheetDescription>
       </SheetHeader>
       <div class="flex size-full flex-col">
-        <slot />
+        <slot></slot>
       </div>
     </SheetContent>
   </Sheet>
@@ -72,7 +72,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
             : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)'
         )
       "
-    />
+    ></div>
     <div
       :class="
         cn(
@@ -93,7 +93,7 @@ const { isMobile, state, openMobile, setOpenMobile } = useSidebar();
         data-sidebar="sidebar"
         class="flex size-full flex-col bg-sidebar group-data-[variant=floating]:rounded-lg group-data-[variant=floating]:shadow-sm group-data-[variant=floating]:ring-1 group-data-[variant=floating]:ring-sidebar-border"
       >
-        <slot />
+        <slot></slot>
       </div>
     </div>
   </div>
