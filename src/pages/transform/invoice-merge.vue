@@ -330,7 +330,7 @@ const handleExport = async () => {
         class="mt-4 max-w-md rounded-lg border border-amber-300 bg-amber-50 px-4 py-2.5 text-center dark:border-amber-700 dark:bg-amber-950/50"
       >
         <p class="text-xs text-amber-700 dark:text-amber-300">
-          建议单次选择不超过 50
+          💡 建议单次选择不超过 50
           个文件。文件过大或过多可能导致浏览器响应变慢，可分批处理以获得更好的体验。
         </p>
       </div>
