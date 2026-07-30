@@ -1,13 +1,14 @@
 <script lang="ts" setup>
 import type { ToasterProps } from 'vue-sonner';
 import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-  XIcon,
-} from '@lucide/vue';
+  Alert02Icon,
+  Cancel01Icon,
+  CancelCircleIcon,
+  CheckmarkCircle01Icon,
+  InformationCircleIcon,
+  Loading03Icon,
+} from '@hugeicons/core-free-icons';
+import { HugeiconsIcon } from '@hugeicons/vue';
 import { Toaster as Sonner } from 'vue-sonner';
 import { cn } from '@/lib/utils';
 
@@ -26,24 +27,24 @@ const props = defineProps<ToasterProps>();
     v-bind="props"
   >
     <template #success-icon>
-      <CircleCheckIcon class="size-4" />
+      <HugeiconsIcon :icon="CheckmarkCircle01Icon" class="size-4 text-green-500" />
     </template>
     <template #info-icon>
-      <InfoIcon class="size-4" />
+      <HugeiconsIcon :icon="InformationCircleIcon" class="size-4 text-blue-500" />
     </template>
     <template #warning-icon>
-      <TriangleAlertIcon class="size-4" />
+      <HugeiconsIcon :icon="Alert02Icon" class="size-4 text-yellow-500" />
     </template>
     <template #error-icon>
-      <OctagonXIcon class="size-4" />
+      <HugeiconsIcon :icon="CancelCircleIcon" class="size-4 text-red-500" />
     </template>
     <template #loading-icon>
       <div>
-        <Loader2Icon class="size-4 animate-spin" />
+        <HugeiconsIcon :icon="Loading03Icon" class="size-4 animate-spin text-muted-foreground" />
       </div>
     </template>
     <template #close-icon>
-      <XIcon class="size-4" />
+      <HugeiconsIcon :icon="Cancel01Icon" class="size-4 text-muted-foreground" />
     </template>
   </Sonner>
 </template>

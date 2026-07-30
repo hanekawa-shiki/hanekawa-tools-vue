@@ -70,6 +70,8 @@ const perPage = ref<2 | 4>(4);
 const loading = ref(false);
 const exporting = ref(false);
 const dragIndex = ref<number | null>(null);
+const previewModalVisible = ref(false);
+const previewUrl = ref('');
 
 const totalPages = computed(() =>
   invoices.value.length === 0 ? 0 : Math.ceil(invoices.value.length / perPage.value)
@@ -223,6 +225,16 @@ const handleExport = async () => {
     exporting.value = false;
   }
 };
+
+const openPreview = (url: string) => {
+  previewUrl.value = url;
+  previewModalVisible.value = true;
+};
+
+const closePreview = () => {
+  previewModalVisible.value = false;
+  previewUrl.value = '';
+};
 </script>
 
 <template>
@@ -305,8 +317,9 @@ const handleExport = async () => {
               <iframe
                 v-if="inv.previewDataUrl"
                 :src="inv.previewDataUrl"
-                class="pointer-events-none h-48 w-full flex-1 border-0"
+                class="h-48 w-full flex-1 cursor-pointer border-0"
                 :title="inv.fileName"
+                @click="openPreview(inv.previewDataUrl!)"
               ></iframe>
               <span class="mt-1 w-full truncate text-center text-xs text-muted-foreground">{{
                 inv.fileName
@@ -335,5 +348,30 @@ const handleExport = async () => {
         </p>
       </div>
     </div>
+
+    <!-- 预览模态框 -->
+    <Teleport to="body">
+      <div
+        v-if="previewModalVisible"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/80"
+        @click.self="closePreview"
+      >
+        <div class="relative max-h-[90vh] max-w-[90vw]">
+          <div
+            title="关闭"
+            class="absolute -top-10 right-0 inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/20 text-white hover:bg-white/30"
+            @click="closePreview"
+          >
+            <Icon name="Cancel01Icon" class="size-5" />
+          </div>
+          <iframe
+            v-if="previewUrl"
+            :src="previewUrl"
+            class="h-[85vh] w-[80vw] rounded-lg border-0 bg-white"
+            title="发票预览"
+          ></iframe>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>

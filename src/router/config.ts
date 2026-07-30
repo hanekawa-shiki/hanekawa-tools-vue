@@ -29,6 +29,11 @@ export const pageMeta: Record<string, PageMetaConfig> = {
     description: '查询全国各地最新汽油、柴油价格。',
     icon: 'FuelStationIcon',
   },
+  '/query/media-types': {
+    title: 'Media Types',
+    description: '查询全部 Media Type(MIME 类型)，支持文件后缀和类型名模糊搜索。',
+    icon: 'FileTypeIcon',
+  },
   '/transform/torrent2magnet': {
     title: '种子转磁力链',
     description:
@@ -45,16 +50,11 @@ export const pageMeta: Record<string, PageMetaConfig> = {
     description: '在线取色器，支持 HEX、RGB、HSL、HSV、CMYK 等多种颜色格式一键复制。',
     icon: 'ColorPickerIcon',
   },
-  '/query/media-types': {
-    title: 'Media Types',
-    description: '查询全部 Media Type(MIME 类型)，支持文件后缀和类型名模糊搜索。',
-    icon: 'FileTypeIcon',
-  },
 };
 
 export const routeConfig: RouteRecordRaw[] = [
   {
-    path: '',
+    path: 'home',
     name: 'home',
     component: async () => import('@/pages/index.vue'),
     meta: pageMeta['/home'] as RouteMeta,

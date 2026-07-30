@@ -8,6 +8,7 @@ import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
 import App from './App.vue';
 import Icon from './components/icon.vue';
+import { routeConfig } from './router/config';
 import 'dayjs/locale/zh-cn';
 import './index.css';
 
@@ -25,25 +26,7 @@ const router = createRouter({
       component: async () => import('@/layout/index.vue'),
       children: [
         { path: '', redirect: '/home' },
-        { path: 'home', component: async () => import('@/pages/index.vue') },
-        { path: 'query/calendar', component: async () => import('@/pages/query/calendar.vue') },
-        { path: 'query/oil-prices', component: async () => import('@/pages/query/oil-prices.vue') },
-        {
-          path: 'query/media-types',
-          component: async () => import('@/pages/query/media-types.vue'),
-        },
-        {
-          path: 'transform/torrent2magnet',
-          component: async () => import('@/pages/transform/torrent2magnet.vue'),
-        },
-        {
-          path: 'transform/invoice-merge',
-          component: async () => import('@/pages/transform/invoice-merge.vue'),
-        },
-        {
-          path: 'transform/color-picker',
-          component: async () => import('@/pages/transform/color-picker.vue'),
-        },
+        ...routeConfig,
         { path: '/:pathMatch(.*)*', component: async () => import('@/pages/404.vue') },
       ],
     },
