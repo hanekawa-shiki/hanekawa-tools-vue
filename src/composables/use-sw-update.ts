@@ -29,6 +29,8 @@ export function useSWUpdate() {
     needRefresh.value = false;
 
     const sw = registration.value.waiting;
+    sw.postMessage({ type: 'SKIP_WAITING' });
+
     navigator.serviceWorker.addEventListener(
       'controllerchange',
       () => {
@@ -36,7 +38,6 @@ export function useSWUpdate() {
       },
       { once: true }
     );
-    sw.postMessage({ type: 'SKIP_WAITING' });
   }
 
   function setRegistration(reg: ServiceWorkerRegistration) {
