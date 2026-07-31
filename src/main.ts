@@ -40,21 +40,23 @@ app.use(router);
 app.component('Icon', Icon);
 app.mount('#app');
 
-const { setRegistration, checkForUpdates } = useSWUpdate();
+const { setNeedRefresh } = useSWUpdate();
 
 registerSW({
   immediate: true,
+  onNeedRefresh() {
+    console.warn('[PWA] 发现新版本');
+    setNeedRefresh();
+  },
+  onOfflineReady() {
+    console.warn('[PWA] 应用已可离线使用');
+  },
   onRegisteredSW(_swUrl, reg) {
     if (reg != null) {
       console.warn('[PWA] 注册成功, scope:', reg.scope);
-      setRegistration(reg);
     }
   },
   onRegistrationError(error) {
     console.error('[PWA] 注册失败:', error);
   },
-});
-
-void router.afterEach(() => {
-  void checkForUpdates();
 });
