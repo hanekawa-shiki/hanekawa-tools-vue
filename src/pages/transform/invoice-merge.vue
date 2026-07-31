@@ -145,7 +145,7 @@ const handleClearAll = () => {
   toast.info('已清除全部发票');
 };
 
-// Simple drag-and-drop using native HTML5 drag
+// 基于原生 HTML5 Drag and Drop 的简单拖拽实现
 const handleDragStart = (id: string) => {
   dragId.value = id;
 };

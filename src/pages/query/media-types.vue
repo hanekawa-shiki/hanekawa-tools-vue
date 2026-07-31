@@ -2,6 +2,7 @@
 import Fuse from 'fuse.js';
 import mimeDb from 'mime-db';
 import { computed, ref } from 'vue';
+import { toast } from 'vue-sonner';
 import PageHeader from '@/components/page-header.vue';
 import { Input } from '@/components/ui/input';
 
@@ -82,6 +83,15 @@ const totalHeight = computed(() => results.value.length * itemHeight);
 const handleScroll = (e: Event) => {
   scrollTop.value = (e.target as HTMLDivElement).scrollTop;
 };
+
+async function copyMime(mime: string) {
+  try {
+    await navigator.clipboard.writeText(mime);
+    toast.success(`已复制 ${mime}`);
+  } catch {
+    toast.error('复制失败');
+  }
+}
 </script>
 
 <template>
@@ -139,8 +149,11 @@ const handleScroll = (e: Event) => {
             }"
             class="flex items-center border-b text-sm transition-colors hover:bg-muted/50"
           >
-            <div class="flex w-100 shrink-0 items-center gap-2 overflow-hidden px-4 py-3">
-              <Icon name="File01Icon" class="size-4 shrink-0 text-muted-foreground" />
+            <div
+              class="flex w-100 shrink-0 cursor-pointer items-center gap-2 overflow-hidden px-4 py-3 hover:text-foreground"
+              @click="copyMime(virtualRow.mime)"
+            >
+              <Icon name="Copy01Icon" class="size-4 shrink-0 text-muted-foreground" />
               <span class="truncate font-mono text-xs">{{ virtualRow.mime }}</span>
             </div>
             <div

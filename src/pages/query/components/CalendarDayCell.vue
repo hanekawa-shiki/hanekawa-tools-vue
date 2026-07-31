@@ -42,7 +42,7 @@ const handleSelect = (cell: CalendarCell, year: number, month: number) => {
     @keydown.enter="handleSelect(cell, year, month)"
     @keydown.space.prevent="handleSelect(cell, year, month)"
   >
-    <!-- Tag (班/休) -->
+    <!-- 标签（班/休） -->
     <span
       v-if="cell.isWorkday"
       class="absolute top-0 left-0 flex size-3.5 items-center justify-center rounded-tl rounded-br bg-gray-200 text-[7px] leading-none font-bold text-gray-500 dark:bg-gray-700 dark:text-gray-300"
@@ -65,7 +65,7 @@ const handleSelect = (cell: CalendarCell, year: number, month: number) => {
       休
     </span>
 
-    <!-- Day number -->
+    <!-- 日期数字 -->
     <span
       class="mt-1 text-sm"
       :class="[
@@ -79,7 +79,7 @@ const handleSelect = (cell: CalendarCell, year: number, month: number) => {
       {{ cell.day }}
     </span>
 
-    <!-- Holiday/Solar term/Lunar -->
+    <!-- 节假日/节气/农历 -->
     <span
       v-if="cell.showHolidayName"
       class="text-[10px] leading-tight"

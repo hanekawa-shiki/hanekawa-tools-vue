@@ -17,7 +17,7 @@ export function setWeekStart(val: 0 | 6) {
   try {
     localStorage.setItem(WEEK_START_KEY, String(val));
   } catch {
-    /* ignore */
+    /* 忽略 */
   }
 }
 
