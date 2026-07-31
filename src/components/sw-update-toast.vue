@@ -25,12 +25,19 @@ async function checkForUpdates() {
   }
 }
 
-async function applyUpdate() {
+function applyUpdate() {
   if (!newWorker) {
+    window.location.reload();
     return;
   }
 
   newWorker.postMessage({ type: 'skip-waiting' });
+
+  const onActivated = () => {
+    navigator.serviceWorker.removeEventListener('controllerchange', onActivated);
+    window.location.reload();
+  };
+  navigator.serviceWorker.addEventListener('controllerchange', onActivated);
 }
 
 function onNewWorkerActivated() {
@@ -38,7 +45,7 @@ function onNewWorkerActivated() {
   toast('新版本已就绪', {
     description: '点击刷新以应用最新版本',
     duration: Infinity,
-    action: { label: '刷新', onClick: () => window.location.reload() },
+    action: { label: '刷新', onClick: applyUpdate },
     cancel: { label: '稍后', onClick: close },
   });
 }
@@ -69,24 +76,12 @@ onMounted(async () => {
         const worker = e.target as ServiceWorker;
         if (worker.state === 'installed' && navigator.serviceWorker.controller) {
           newWorker = worker;
-          applyUpdate();
+          onNewWorkerActivated();
         }
       });
     };
 
     reg.addEventListener('updatefound', updateHandler);
-
-    navigator.serviceWorker.addEventListener('controllerchange', () => {
-      console.warn('[SW] 新版本已激活');
-      if (needRefresh.value) {
-        toast('资源已更新', {
-          description: '点击刷新页面使新版本生效',
-          duration: Infinity,
-          action: { label: '刷新', onClick: () => window.location.reload() },
-          cancel: { label: '稍后', onClick: close },
-        });
-      }
-    });
 
     router.afterEach(() => {
       checkForUpdates();

@@ -716,7 +716,7 @@ onMounted(() => {
 <template>
   <div class="flex h-full flex-col items-center justify-start gap-4 px-4 py-6">
     <p class="text-center text-sm text-muted-foreground">
-      太空侵略者摧毁了这个页面！向它们复仇吧！1
+      太空侵略者摧毁了这个页面！向它们复仇吧！
       <br />
       使用 <span class="font-bold text-foreground">A</span>
       <span class="font-bold text-foreground">D</span> 或
