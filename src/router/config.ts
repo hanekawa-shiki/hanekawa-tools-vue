@@ -35,7 +35,7 @@ export const pageMeta: Record<string, PageMetaConfig> = {
     icon: 'FileTypeIcon',
   },
   '/transform/torrent2magnet': {
-    title: '1种子转磁力链',
+    title: '种子转磁力链',
     description:
       '将 Torrent 种子文件快速转换为磁力链接，方便直接下载。支持批量转换及 Magnet 导出到文件',
     icon: 'MagnetIcon',
