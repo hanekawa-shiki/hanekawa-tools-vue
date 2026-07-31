@@ -40,7 +40,7 @@ app.use(router);
 app.component('Icon', Icon);
 app.mount('#app');
 
-const _updateSW = registerSW({
+registerSW({
   immediate: true,
 });
 
