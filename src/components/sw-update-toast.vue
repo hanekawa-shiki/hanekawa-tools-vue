@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref, watch } from 'vue';
 import { toast } from 'vue-sonner';
 
 const offlineReady = ref(false);
@@ -10,18 +10,21 @@ const close = () => {
   needRefresh.value = false;
 };
 
+let updateHandler: (() => void) | null = null;
+
 onMounted(async () => {
-  if ('serviceWorker' in navigator) {
-    const reg = await navigator.serviceWorker.getRegistration();
-    if (!reg) {
-      return;
-    }
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
 
     if (reg.waiting) {
       needRefresh.value = true;
     }
 
-    reg.addEventListener('updatefound', () => {
+    updateHandler = () => {
       const newWorker = reg.installing;
       if (!newWorker) {
         return;
@@ -31,11 +34,23 @@ onMounted(async () => {
           needRefresh.value = true;
         }
       });
-    });
+    };
+
+    reg.addEventListener('updatefound', updateHandler);
 
     if (reg.active && !navigator.serviceWorker.controller) {
       offlineReady.value = true;
     }
+  } catch {
+    // SW 注册失败，忽略
+  }
+});
+
+onUnmounted(() => {
+  if (updateHandler) {
+    navigator.serviceWorker.ready.then((reg) => {
+      reg.removeEventListener('updatefound', updateHandler!);
+    });
   }
 });
 

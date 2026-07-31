@@ -6,8 +6,8 @@ import { defineConfig, loadEnv } from 'vite';
 import viteCompression from 'vite-plugin-compression';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
 import { VitePWA } from 'vite-plugin-pwa';
-import { fontSwitch } from './vite-plugins/fontSwitch';
-import htmlBuildTime from './vite-plugins/htmlBuildTime';
+import { fontSwitch } from './vite-plugins/fontSwitch.ts';
+import htmlBuildTime from './vite-plugins/htmlBuildTime.ts';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -32,6 +32,7 @@ export default defineConfig(({ mode }) => {
           name: 'hanekawa-tools',
           short_name: 'hanekawa-tools',
           description: '日常小工具集合 - 万年历、油价查询、种子转磁力链、发票合并等实用工具',
+          lang: 'zh-CN',
           theme_color: '#ffffff',
           background_color: '#ffffff',
           display: 'standalone',
@@ -39,16 +40,28 @@ export default defineConfig(({ mode }) => {
           start_url: '/',
           icons: [
             {
-              src: '/favicon.svg',
-              sizes: 'any',
-              type: 'image/svg+xml',
+              src: '/icon-192.png',
+              sizes: '192x192',
+              type: 'image/png',
               purpose: 'any',
+            },
+            {
+              src: '/icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'any',
+            },
+            {
+              src: '/icon-512.png',
+              sizes: '512x512',
+              type: 'image/png',
+              purpose: 'maskable',
             },
             {
               src: '/favicon.svg',
               sizes: 'any',
               type: 'image/svg+xml',
-              purpose: 'maskable',
+              purpose: 'any',
             },
           ],
         },

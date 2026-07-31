@@ -22,7 +22,7 @@ const { toggleSidebar } = useSidebar();
     :class="cn('size-7', props.class)"
     @click="toggleSidebar"
   >
-    <HugeiconsIcon :icon="LayoutLeftIcon" />
+    <HugeiconsIcon :icon="LayoutLeftIcon" :stroke-width="2" class="size-6" />
     <span class="sr-only">Toggle Sidebar</span>
   </Button>
 </template>
