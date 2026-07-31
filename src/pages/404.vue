@@ -73,12 +73,12 @@ class Projectile {
 }
 
 class KeyController {
-  KEYS = { LEFT: 37, RIGHT: 39, Space: 32 };
+  KEYS = { LEFT: 37, RIGHT: 39 };
   private keyState: Record<number, boolean> = {};
   private touchState: Record<string, boolean> = {};
 
   constructor() {
-    const keyCode = [37, 39, 32];
+    const keyCode = [37, 39, 65, 68];
     window.addEventListener('keydown', (e) => {
       for (const code of keyCode) {
         if (code === e.keyCode) {
@@ -103,13 +103,14 @@ class KeyController {
 
   isDown(keyCode: number) {
     if (keyCode === this.KEYS.LEFT) {
-      return this.keyState[keyCode] === true || this.touchState.left === true;
+      return (
+        this.keyState[37] === true || this.keyState[65] === true || this.touchState.left === true
+      );
     }
     if (keyCode === this.KEYS.RIGHT) {
-      return this.keyState[keyCode] === true || this.touchState.right === true;
-    }
-    if (keyCode === this.KEYS.Space) {
-      return this.keyState[keyCode] === true || this.touchState.shoot === true;
+      return (
+        this.keyState[39] === true || this.keyState[68] === true || this.touchState.right === true
+      );
     }
     return this.keyState[keyCode] === true;
   }
@@ -118,17 +119,17 @@ class KeyController {
 class Player {
   active = true;
   size: Size = { width: 16, height: 8 };
-  shooterHeat = -3;
+  shootCooldown = 0;
   coordinates: Coordinates;
   projectile: Projectile[] = [];
   keyboarder: KeyController;
 
-  constructor(gameSize: GameSize) {
+  constructor(gameSize: GameSize, keyboarder: KeyController) {
     this.coordinates = {
       x: (gameSize.width / 2 - this.size.width / 2) | 0,
       y: gameSize.height - this.size.height * 2,
     };
-    this.keyboarder = new KeyController();
+    this.keyboarder = keyboarder;
   }
 
   update(gameSize: GameSize) {
@@ -150,20 +151,16 @@ class Player {
       this.coordinates.x += 2;
     }
 
-    if (this.keyboarder.isDown(this.keyboarder.KEYS.Space)) {
-      this.shooterHeat += 1;
-      if (this.shooterHeat < 0) {
-        this.projectile.push(
-          new Projectile(
-            { x: this.coordinates.x + this.size.width / 2 - 1, y: this.coordinates.y - 1 },
-            { x: 0, y: -7 }
-          )
-        );
-      } else if (this.shooterHeat > 12) {
-        this.shooterHeat = -3;
-      }
+    if (this.shootCooldown > 0) {
+      this.shootCooldown--;
     } else {
-      this.shooterHeat = -3;
+      this.projectile.push(
+        new Projectile(
+          { x: this.coordinates.x + this.size.width / 2 - 1, y: this.coordinates.y - 1 },
+          { x: 0, y: -7 }
+        )
+      );
+      this.shootCooldown = 15;
     }
   }
 
@@ -302,6 +299,7 @@ class Game {
   player: Player;
   invaders: Invader[];
   invaderShots: Projectile[] = [];
+  restartBtnRect = { x: 0, y: 0, w: 0, h: 0 };
   private invaderSize: number;
   private invaderMultiplier: number;
   private invaderSpeed: number;
@@ -311,24 +309,31 @@ class Game {
   private invaderCanvas: HTMLCanvasElement;
   private gameSize: GameSize;
   private colors: GameColors;
+  private keyboarder: KeyController;
 
-  constructor(gameSize: GameSize, invaderCanvas: HTMLCanvasElement, colors: GameColors) {
+  constructor(
+    gameSize: GameSize,
+    invaderCanvas: HTMLCanvasElement,
+    colors: GameColors,
+    keyboarder: KeyController
+  ) {
     this.gameSize = gameSize;
     this.invaderCanvas = invaderCanvas;
     this.colors = colors;
+    this.keyboarder = keyboarder;
     this.invaderSize = 20;
     this.invaderMultiplier = gameSize.width > 1200 ? 3 : gameSize.width > 800 ? 2 : 1;
     this.invaderSpeed = 20;
     this.invaderAttackRate = 0.999;
     this.spawnDelayCounter = this.invaderSpawnDelay;
-    this.player = new Player(gameSize);
+    this.player = new Player(gameSize, keyboarder);
     this.invaders = [];
   }
 
   init(kills: { value: number }, invaderDownTimer: ReturnType<typeof setInterval> | undefined) {
     this.level = -1;
     this.lost = false;
-    this.player = new Player(this.gameSize);
+    this.player = new Player(this.gameSize, this.keyboarder);
     this.invaders = [];
     this.invaderShots = [];
     this.invaderAttackRate = 0.999;
@@ -399,7 +404,27 @@ class Game {
       screen.fillText('You lost', this.gameSize.width / 2, this.gameSize.height / 2);
       screen.font = '20px Lucida Console';
       screen.fillText(`Points: ${kills}`, this.gameSize.width / 2, this.gameSize.height / 2 + 30);
+
+      const btnW = 140;
+      const btnH = 36;
+      const btnX = (this.gameSize.width - btnW) / 2;
+      const btnY = this.gameSize.height / 2 + 50;
+      this.restartBtnRect = { x: btnX, y: btnY, w: btnW, h: btnH };
+
+      screen.beginPath();
+      screen.roundRect(btnX, btnY, btnW, btnH, 18);
+      screen.fillStyle = 'rgba(255, 255, 255, 0.1)';
+      screen.fill();
+      screen.strokeStyle = this.colors.fill;
+      screen.lineWidth = 1;
+      screen.stroke();
+
+      screen.font = '14px Lucida Console';
+      screen.fillStyle = this.colors.fill;
+      screen.textAlign = 'center';
+      screen.fillText('重新开始', this.gameSize.width / 2, btnY + 23);
     } else {
+      this.restartBtnRect = { x: 0, y: 0, w: 0, h: 0 };
       screen.clearRect(0, 0, this.gameSize.width, this.gameSize.height);
       screen.font = '10px Lucida Console';
       screen.textAlign = 'right';
@@ -430,6 +455,8 @@ class Game {
   }
 }
 
+const gameLost = ref(false);
+
 onMounted(() => {
   const maybeCanvas = canvasRef.value;
   if (!maybeCanvas) {
@@ -442,6 +469,7 @@ onMounted(() => {
   let invaderDownTimer: ReturnType<typeof setInterval> | undefined;
   let game: Game;
   let animFrameId: number;
+  const keyboarder = new KeyController();
 
   function getColors(): GameColors {
     if (isDark.value) {
@@ -495,10 +523,70 @@ onMounted(() => {
   initGameStart();
   loop();
 
+  function handleCanvasClick(e: MouseEvent) {
+    if (!game.lost) {
+      return;
+    }
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    const btn = game.restartBtnRect;
+    if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+      gameLost.value = false;
+      invaderCanvas = createInvaderCanvas();
+      game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
+      if (invaderDownTimer) {
+        clearInterval(invaderDownTimer);
+      }
+      invaderDownTimer = game.init(kills, invaderDownTimer);
+    }
+  }
+
+  canvas.addEventListener('click', handleCanvasClick);
+  canvas.addEventListener('mousemove', (e: MouseEvent) => {
+    if (!game.lost) {
+      canvas.style.cursor = 'default';
+      return;
+    }
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (e.clientX - rect.left) * scaleX;
+    const y = (e.clientY - rect.top) * scaleY;
+    const btn = game.restartBtnRect;
+    canvas.style.cursor =
+      x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h ? 'pointer' : 'default';
+  });
+  canvas.addEventListener('touchend', (e: TouchEvent) => {
+    if (!game.lost || !e.changedTouches.length) {
+      return;
+    }
+    const touch = e.changedTouches[0];
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = canvas.width / rect.width;
+    const scaleY = canvas.height / rect.height;
+    const x = (touch.clientX - rect.left) * scaleX;
+    const y = (touch.clientY - rect.top) * scaleY;
+    const btn = game.restartBtnRect;
+    if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
+      e.preventDefault();
+      gameLost.value = false;
+      invaderCanvas = createInvaderCanvas();
+      game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
+      if (invaderDownTimer) {
+        clearInterval(invaderDownTimer);
+      }
+      invaderDownTimer = game.init(kills, invaderDownTimer);
+    }
+  });
+
   function loop() {
     game.player.keyboarder.updateTouchState(touchState.value);
     game.update(kills);
     game.draw(screen, kills.value);
+    gameLost.value = game.lost;
     animFrameId = requestAnimationFrame(loop);
   }
 
@@ -517,7 +605,7 @@ onMounted(() => {
       gameSize = { width: 600, height: 300 };
     }
 
-    game = new Game(gameSize, invaderCanvas, getColors());
+    game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
     if (invaderDownTimer) {
       clearInterval(invaderDownTimer);
     }
@@ -526,7 +614,7 @@ onMounted(() => {
 
   watch(isDark, () => {
     invaderCanvas = createInvaderCanvas();
-    game = new Game(gameSize, invaderCanvas, getColors());
+    game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
     if (invaderDownTimer) {
       clearInterval(invaderDownTimer);
     }
@@ -536,6 +624,7 @@ onMounted(() => {
   window.addEventListener('resize', initGameStart);
 
   onUnmounted(() => {
+    canvas.removeEventListener('click', handleCanvasClick);
     if (invaderDownTimer) {
       clearInterval(invaderDownTimer);
     }
@@ -551,9 +640,10 @@ onMounted(() => {
     <p class="text-sm text-muted-foreground">
       太空侵略者摧毁了这个页面！向它们复仇吧！
       <br />
-      使用 <span class="font-bold text-foreground">空格</span> 射击，使用
+      使用 <span class="font-bold text-foreground">A</span>
+      <span class="font-bold text-foreground">D</span> 或
       <span class="font-bold text-foreground">←</span>
-      <span class="font-bold text-foreground">→</span> 移动！
+      <span class="font-bold text-foreground">→</span> 移动，子弹自动发射！
     </p>
     <canvas ref="canvasRef" class="block rounded-lg border border-border bg-background"></canvas>
     <div class="flex items-center gap-4 md:hidden">
@@ -563,13 +653,6 @@ onMounted(() => {
         @touchend="handleTouchEnd('left')"
       >
         ←
-      </button>
-      <button
-        class="flex size-14 items-center justify-center rounded-full border border-primary bg-primary/20 text-lg font-bold text-primary transition-all active:scale-95 active:bg-primary/30"
-        @touchstart="handleTouchStart('shoot')"
-        @touchend="handleTouchEnd('shoot')"
-      >
-        🔫
       </button>
       <button
         class="flex size-12 items-center justify-center rounded-full border border-border bg-input/30 text-lg font-bold transition-all active:scale-95 active:bg-input/50"
