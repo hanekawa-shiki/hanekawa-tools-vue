@@ -7,9 +7,10 @@ import weekOfYear from 'dayjs/plugin/weekOfYear';
 import { registerSW } from 'virtual:pwa-register';
 import { createApp } from 'vue';
 import { createRouter, createWebHashHistory } from 'vue-router';
+import { toast } from 'vue-sonner';
 import App from './App.vue';
 import Icon from './components/icon.vue';
-import { useSWUpdate } from './composables/use-sw-update';
+import { PWA_UPDATED_KEY, useSWUpdate } from './composables/use-sw-update';
 import { routeConfig } from './router/config';
 import 'dayjs/locale/zh-cn';
 import './index.css';
@@ -40,13 +41,17 @@ app.use(router);
 app.component('Icon', Icon);
 app.mount('#app');
 
-const { setRegistration, checkForUpdates, setNeedRefresh } = useSWUpdate();
+const { setRegistration, checkForUpdates } = useSWUpdate();
 
 registerSW({
   immediate: true,
-  onNeedRefresh() {
-    console.warn('[PWA] 发现新版本');
-    setNeedRefresh();
+  onNeedReload() {
+    console.warn('[PWA] 新版本已下载，即将自动刷新页面...');
+    sessionStorage.setItem(PWA_UPDATED_KEY, '1');
+    toast.info('发现新版本，正在自动更新...');
+    window.setTimeout(() => {
+      window.location.reload();
+    }, 800);
   },
   onOfflineReady() {
     console.warn('[PWA] 应用已可离线使用');

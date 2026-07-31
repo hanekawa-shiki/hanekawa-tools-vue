@@ -26,12 +26,12 @@ export default defineConfig(({ mode }) => {
       htmlBuildTime(),
       fontSwitch(mode),
       VitePWA({
-        registerType: 'prompt',
-        includeAssets: ['avatar.jpeg'],
+        registerType: 'autoUpdate',
         manifest: {
           name: 'Hanekawa Tools',
           short_name: 'Hanekawa',
           description: '中文日常小工具集合',
+          lang: 'zh-CN',
           theme_color: '#ffffff',
           icons: [
             {
@@ -53,8 +53,9 @@ export default defineConfig(({ mode }) => {
           ],
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,jpeg,jpg,webp}'],
           clientsClaim: true,
+          skipWaiting: true,
           navigateFallback: 'index.html',
           navigateFallbackDenylist: [/^\/api\//],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,

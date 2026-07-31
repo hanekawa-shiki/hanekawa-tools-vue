@@ -1,6 +1,7 @@
 import { ref } from 'vue';
 
-const needRefresh = ref(false);
+export const PWA_UPDATED_KEY = 'hanekawa-pwa-updated';
+
 const registration = ref<ServiceWorkerRegistration | null>(null);
 let lastCheck = 0;
 
@@ -21,32 +22,9 @@ export function useSWUpdate() {
     }
   }
 
-  function applyUpdate() {
-    if (!needRefresh.value || !registration.value?.waiting) {
-      return;
-    }
-    console.warn('[PWA] 正在应用更新...');
-    needRefresh.value = false;
-
-    const sw = registration.value.waiting;
-    sw.postMessage({ type: 'SKIP_WAITING' });
-
-    navigator.serviceWorker.addEventListener(
-      'controllerchange',
-      () => {
-        window.location.reload();
-      },
-      { once: true }
-    );
-  }
-
   function setRegistration(reg: ServiceWorkerRegistration) {
     registration.value = reg;
   }
 
-  function setNeedRefresh() {
-    needRefresh.value = true;
-  }
-
-  return { needRefresh, checkForUpdates, applyUpdate, setRegistration, setNeedRefresh };
+  return { checkForUpdates, setRegistration };
 }
