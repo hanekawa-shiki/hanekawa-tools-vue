@@ -14,7 +14,7 @@ export function useSWUpdate() {
     try {
       await registration.value.update();
     } catch (e) {
-      console.error('SW update check failed:', e);
+      console.error('[PWA] 更新检查失败:', e);
     }
   }
 
@@ -22,12 +22,14 @@ export function useSWUpdate() {
     if (!registration.value?.waiting) {
       return;
     }
+    console.warn('[PWA] 正在应用更新...');
     registration.value.waiting.postMessage({ type: 'SKIP_WAITING' });
     needRefresh.value = false;
   }
 
   function setRegistration(reg: ServiceWorkerRegistration) {
     registration.value = reg;
+
     reg.addEventListener('updatefound', () => {
       const installing = reg.installing;
       if (!installing) {
@@ -35,6 +37,7 @@ export function useSWUpdate() {
       }
       installing.addEventListener('statechange', () => {
         if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+          console.warn('[PWA] 发现新版本');
           needRefresh.value = true;
         }
       });

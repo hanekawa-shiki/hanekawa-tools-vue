@@ -42,6 +42,14 @@ app.mount('#app');
 
 registerSW({
   immediate: true,
+  onRegisteredSW(_swUrl, reg) {
+    if (reg != null) {
+      console.warn('[PWA] 注册成功, scope:', reg.scope);
+    }
+  },
+  onRegistrationError(error) {
+    console.error('[PWA] 注册失败:', error);
+  },
 });
 
 const { setRegistration, checkForUpdates } = useSWUpdate();
