@@ -29,8 +29,8 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         manifest: {
           name: 'Hanekawa Tools',
-          short_name: 'Hanekawa',
-          description: '中文日常小工具集合',
+          short_name: 'Hanekawa Tools',
+          description: '日常小工具集合 - 万年历、油价查询、种子转磁力链、发票合并等实用工具',
           lang: 'zh-CN',
           theme_color: '#ffffff',
           icons: [
