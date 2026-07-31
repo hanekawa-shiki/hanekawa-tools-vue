@@ -54,17 +54,10 @@ export default defineConfig(({ mode }) => {
         },
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2}'],
-          navigateFallback: null,
+          navigateFallback: 'index.html',
           navigateFallbackDenylist: [/^\/api\//],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           runtimeCaching: [
-            {
-              urlPattern: ({ request }) => request.mode === 'navigate',
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'pages',
-              },
-            },
             {
               urlPattern: /^https:\/\/tools\.hanekawa\.top\/api\//i,
               handler: 'NetworkFirst',
