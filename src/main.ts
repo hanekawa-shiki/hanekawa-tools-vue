@@ -40,26 +40,19 @@ app.use(router);
 app.component('Icon', Icon);
 app.mount('#app');
 
+const { setRegistration, checkForUpdates } = useSWUpdate();
+
 registerSW({
   immediate: true,
   onRegisteredSW(_swUrl, reg) {
     if (reg != null) {
       console.warn('[PWA] 注册成功, scope:', reg.scope);
+      setRegistration(reg);
     }
   },
   onRegistrationError(error) {
     console.error('[PWA] 注册失败:', error);
   },
-});
-
-const { setRegistration, checkForUpdates } = useSWUpdate();
-
-void router.isReady().then(() => {
-  if ('serviceWorker' in navigator) {
-    void navigator.serviceWorker.ready.then((reg) => {
-      setRegistration(reg);
-    });
-  }
 });
 
 void router.afterEach(() => {
