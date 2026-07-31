@@ -1,16 +1,49 @@
 <script setup lang="ts">
-import { onMounted, onUnmounted, ref, watch } from 'vue';
+import { onMounted, onUnmounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { toast } from 'vue-sonner';
 
-const offlineReady = ref(false);
 const needRefresh = ref(false);
 
 const close = () => {
-  offlineReady.value = false;
   needRefresh.value = false;
 };
 
 let updateHandler: (() => void) | null = null;
+let newWorker: ServiceWorker | null = null;
+
+async function checkForUpdates() {
+  if (!('serviceWorker' in navigator)) {
+    return;
+  }
+
+  try {
+    const reg = await navigator.serviceWorker.ready;
+    await reg.update();
+  } catch {
+    // 更新检查失败，忽略
+  }
+}
+
+async function applyUpdate() {
+  if (!newWorker) {
+    return;
+  }
+
+  newWorker.postMessage({ type: 'skip-waiting' });
+}
+
+function onNewWorkerActivated() {
+  needRefresh.value = true;
+  toast('新版本已就绪', {
+    description: '点击刷新以应用最新版本',
+    duration: Infinity,
+    action: { label: '刷新', onClick: () => window.location.reload() },
+    cancel: { label: '稍后', onClick: close },
+  });
+}
+
+const router = useRouter();
 
 onMounted(async () => {
   if (!('serviceWorker' in navigator)) {
@@ -19,30 +52,47 @@ onMounted(async () => {
 
   try {
     const reg = await navigator.serviceWorker.ready;
+    console.warn('[SW] 注册成功', reg.scope);
 
     if (reg.waiting) {
-      needRefresh.value = true;
+      newWorker = reg.waiting;
+      onNewWorkerActivated();
     }
 
     updateHandler = () => {
-      const newWorker = reg.installing;
-      if (!newWorker) {
+      const installing = reg.installing;
+      if (!installing) {
         return;
       }
-      newWorker.addEventListener('statechange', () => {
-        if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-          needRefresh.value = true;
+      console.warn('[SW] 发现新版本，正在下载…');
+      installing.addEventListener('statechange', (e) => {
+        const worker = e.target as ServiceWorker;
+        if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+          newWorker = worker;
+          applyUpdate();
         }
       });
     };
 
     reg.addEventListener('updatefound', updateHandler);
 
-    if (reg.active && !navigator.serviceWorker.controller) {
-      offlineReady.value = true;
-    }
-  } catch {
-    // SW 注册失败，忽略
+    navigator.serviceWorker.addEventListener('controllerchange', () => {
+      console.warn('[SW] 新版本已激活');
+      if (needRefresh.value) {
+        toast('资源已更新', {
+          description: '点击刷新页面使新版本生效',
+          duration: Infinity,
+          action: { label: '刷新', onClick: () => window.location.reload() },
+          cancel: { label: '稍后', onClick: close },
+        });
+      }
+    });
+
+    router.afterEach(() => {
+      checkForUpdates();
+    });
+  } catch (err) {
+    console.error('[SW] 注册失败', err);
   }
 });
 
@@ -50,23 +100,6 @@ onUnmounted(() => {
   if (updateHandler) {
     navigator.serviceWorker.ready.then((reg) => {
       reg.removeEventListener('updatefound', updateHandler!);
-    });
-  }
-});
-
-watch(offlineReady, (val) => {
-  if (val) {
-    toast.info('应用已缓存，可离线使用');
-  }
-});
-
-watch(needRefresh, (val) => {
-  if (val) {
-    toast('发现新版本', {
-      description: '点击刷新以获取最新版本',
-      duration: Infinity,
-      action: { label: '刷新', onClick: () => window.location.reload() },
-      cancel: { label: '稍后', onClick: close },
     });
   }
 });
