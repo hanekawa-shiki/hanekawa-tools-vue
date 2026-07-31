@@ -18,20 +18,23 @@
 - **全局通知** — 操作成功/失败实时 Toast 提示
 - **PWA 支持** — 可安装为本地应用，支持离线访问与新版本更新提示
 - **代码分割** — 按路由懒加载 + 第三方库分 chunk，优化首屏加载
+- **404 页面** — 内置 Space Invaders 小游戏
 
 ## 🛠️ 技术栈
 
 | 分类     | 技术                             |
 | -------- | -------------------------------- |
-| 框架     | Vue 3.5 + TypeScript 6           |
+| 框架     | Vue 3.5                          |
 | 构建     | Vite 8                           |
+| 语言     | TypeScript ~6                    |
 | 样式     | Tailwind CSS 4                   |
 | UI 组件  | shadcn-vue (reka-ui)             |
 | 图标     | Hugeicons (@hugeicons/vue)       |
-| 路由     | vue-router 4                     |
+| 路由     | vue-router 5                     |
 | HTTP     | axios                            |
 | 提示框   | vue-sonner                       |
 | 日期     | dayjs + lunisolar                |
+| 模糊搜索 | fuse.js                          |
 | PDF 合并 | pdf-lib                          |
 | 拖拽排序 | 原生 HTML5 Drag and Drop         |
 | PWA      | vite-plugin-pwa + workbox-window |
@@ -73,7 +76,8 @@ hanekawa-tools-vue/
 ├── src/
 │   ├── api/              # API 接口层
 │   ├── components/       # 公共组件 + shadcn-vue
-│   │   ├── icon.vue      # 图标封装组件
+│   │   ├── icon.vue      # 图标封装组件（32 个图标）
+│   │   ├── month-picker.vue  # 月份选择器
 │   │   └── sw-update-toast.vue  # PWA 版本更新提示
 │   ├── composables/      # Vue 组合式函数
 │   ├── data/             # 数据层（节假日等）
@@ -95,8 +99,8 @@ hanekawa-tools-vue/
 ### 新增工具页面
 
 1. 在 `src/pages/` 下创建 `.vue` 文件
-2. 在 `src/main.ts` 的路由配置中添加路由
-3. 在 `src/router/config.ts` 的 `pageMeta` 中添加标题、图标等配置
+2. 在 `src/router/config.ts` 的 `pageMeta` 中添加标题、图标等配置
+3. 在 `src/router/config.ts` 的 `routeConfig` 中添加路由定义
 
 ### 添加新图标
 
@@ -141,8 +145,8 @@ export const newApi = createApi<ResponseType>({
 ## ⚡ 性能优化
 
 - **路由懒加载**：所有页面组件通过动态 `import()` 按需加载
-- **代码分割**：Vite `manualChunks` 将第三方库拆分为独立 chunk（vue、pdf-lib、icons 等）
-- **Brotli 压缩**：构建产物使用 Brotli 级别 11 压缩
+- **代码分割**：Vite `rolldownOptions.groups` 将第三方库拆分为独立 chunk（vue、reka-ui、pdf-lib、icons 等）
+- **Brotli 压缩**：构建产物使用 Brotli 级别 11 压缩（GH 模式）
 - **PWA 离线缓存**：Workbox 预缓存静态资源 + API 响应 NetworkFirst 策略
 - **节假日数据缓存**：内存 Map 缓存，避免重复请求
 
