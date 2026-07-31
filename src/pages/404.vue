@@ -2,6 +2,30 @@
 import { computed, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useTheme } from '@/components/theme-provider.vue';
+import { Button } from '@/components/ui/button';
+
+// 1. 在文件顶部利用 declare global 扩展 DeviceOrientationEvent 的静态方法
+declare global {
+  // 允许 TypeScript 识别静态方法 requestPermission
+  interface DeviceOrientationEvent {}
+
+  // 扩展 DeviceOrientationEvent 构造函数对象的静态属性
+  interface DeviceOrientationEventConstructor {
+    requestPermission?: () => Promise<'granted' | 'denied'>;
+  }
+
+  // 挂载到全局 Window 上的 DeviceOrientationEvent 类型定义
+  interface Window {
+    DeviceOrientationEvent: DeviceOrientationEventConstructor & typeof DeviceOrientationEvent;
+  }
+}
+
+// 辅助类型断言函数：安全获取 iOS 的 requestPermission 静态方法
+function getDeviceOrientationEvent() {
+  return DeviceOrientationEvent as unknown as {
+    requestPermission?: () => Promise<'granted' | 'denied'>;
+  };
+}
 
 const router = useRouter();
 const canvasRef = ref<HTMLCanvasElement | null>(null);
@@ -76,6 +100,12 @@ class KeyController {
   KEYS = { LEFT: 37, RIGHT: 39 };
   private keyState: Record<number, boolean> = {};
   private touchState: Record<string, boolean> = {};
+  private gyroRequested = false;
+  private isIOS =
+    typeof DeviceOrientationEvent !== 'undefined' &&
+    typeof getDeviceOrientationEvent().requestPermission === 'function';
+  tiltLeft = false;
+  tiltRight = false;
 
   constructor() {
     const keyCode = [37, 39, 65, 68];
@@ -95,7 +125,37 @@ class KeyController {
         }
       }
     });
+
+    if (!this.isIOS) {
+      window.addEventListener('deviceorientation', this.handleOrientation);
+    }
   }
+
+  requestGyroPermission() {
+    if (!this.isIOS || this.gyroRequested) {
+      return;
+    }
+    this.gyroRequested = true;
+    (DeviceOrientationEvent as any)
+      .requestPermission()
+      .then((state: string) => {
+        if (state === 'granted') {
+          window.addEventListener('deviceorientation', this.handleOrientation);
+        }
+      })
+      .catch(() => {
+        this.gyroRequested = false;
+      });
+  }
+
+  handleOrientation = (e: DeviceOrientationEvent) => {
+    if (e.gamma === null) {
+      return;
+    }
+    const threshold = 15;
+    this.tiltLeft = e.gamma < -threshold;
+    this.tiltRight = e.gamma > threshold;
+  };
 
   updateTouchState(state: Record<string, boolean>) {
     this.touchState = state;
@@ -104,12 +164,18 @@ class KeyController {
   isDown(keyCode: number) {
     if (keyCode === this.KEYS.LEFT) {
       return (
-        this.keyState[37] === true || this.keyState[65] === true || this.touchState.left === true
+        this.keyState[37] === true ||
+        this.keyState[65] === true ||
+        this.touchState.left === true ||
+        this.tiltLeft
       );
     }
     if (keyCode === this.KEYS.RIGHT) {
       return (
-        this.keyState[39] === true || this.keyState[68] === true || this.touchState.right === true
+        this.keyState[39] === true ||
+        this.keyState[68] === true ||
+        this.touchState.right === true ||
+        this.tiltRight
       );
     }
     return this.keyState[keyCode] === true;
@@ -387,7 +453,9 @@ class Game {
       }
     }
 
-    this.player.update(this.gameSize);
+    if (!this.lost) {
+      this.player.update(this.gameSize);
+    }
     for (const shot of this.invaderShots) {
       shot.update(this.gameSize);
     }
@@ -581,6 +649,16 @@ onMounted(() => {
       invaderDownTimer = game.init(kills, invaderDownTimer);
     }
   });
+  canvas.addEventListener('touchstart', () => {
+    keyboarder.requestGyroPermission();
+  });
+  document.addEventListener(
+    'touchstart',
+    () => {
+      keyboarder.requestGyroPermission();
+    },
+    { once: true }
+  );
 
   function loop() {
     game.player.keyboarder.updateTouchState(touchState.value);
@@ -636,8 +714,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex h-full flex-col items-center justify-center gap-4">
-    <p class="text-sm text-muted-foreground">
+  <div class="flex h-full flex-col items-center justify-start gap-4 px-4 py-6">
+    <p class="text-center text-sm text-muted-foreground">
       太空侵略者摧毁了这个页面！向它们复仇吧！
       <br />
       使用 <span class="font-bold text-foreground">A</span>
@@ -647,27 +725,34 @@ onMounted(() => {
     </p>
     <canvas ref="canvasRef" class="block rounded-lg border border-border bg-background"></canvas>
     <div class="flex items-center gap-4 md:hidden">
-      <button
-        class="flex size-12 items-center justify-center rounded-full border border-border bg-input/30 text-lg font-bold transition-all active:scale-95 active:bg-input/50"
+      <Button
+        variant="outline"
+        size="icon"
+        class="size-12 rounded-full text-lg font-bold active:scale-95 active:bg-input/50"
         @touchstart="handleTouchStart('left')"
         @touchend="handleTouchEnd('left')"
       >
         ←
-      </button>
-      <button
-        class="flex size-12 items-center justify-center rounded-full border border-border bg-input/30 text-lg font-bold transition-all active:scale-95 active:bg-input/50"
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        class="size-12 rounded-full text-lg font-bold active:scale-95 active:bg-input/50"
         @touchstart="handleTouchStart('right')"
         @touchend="handleTouchEnd('right')"
       >
         →
-      </button>
+      </Button>
     </div>
-    <button
-      class="inline-flex h-9 items-center justify-center gap-2 rounded-4xl border border-border bg-input/30 px-3 text-sm font-medium transition-all hover:scale-105 hover:bg-input/50 hover:text-foreground"
+    <p class="text-xs text-muted-foreground md:hidden">也可以左右倾斜手机控制方向</p>
+    <Button
+      variant="outline"
+      size="sm"
+      class="rounded-4xl px-3 transition-all hover:scale-105"
       @click="router.push('/')"
     >
       <Icon name="HomeIcon" class="size-4" />
       返回首页
-    </button>
+    </Button>
   </div>
 </template>

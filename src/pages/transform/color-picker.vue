@@ -2,6 +2,7 @@
 import { computed, ref } from 'vue';
 import { toast } from 'vue-sonner';
 import PageHeader from '@/components/page-header.vue';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 
@@ -215,10 +216,11 @@ const handleCopy = async (label: string, value: string) => {
         <Card class="p-4">
           <div class="text-sm font-medium text-muted-foreground">常用颜色</div>
           <div class="mt-3 flex flex-wrap gap-2">
-            <button
+            <Button
               v-for="color in PRESET_COLORS"
               :key="color"
-              type="button"
+              variant="ghost"
+              size="icon"
               class="size-8 cursor-pointer rounded-md border-2 transition-transform hover:scale-110"
               :class="
                 normalizedHex.toUpperCase() === color.toUpperCase()
@@ -228,7 +230,7 @@ const handleCopy = async (label: string, value: string) => {
               :style="{ backgroundColor: color }"
               :title="color"
               @click="hexInput = color.toUpperCase()"
-            ></button>
+            />
           </div>
         </Card>
       </div>
@@ -263,8 +265,9 @@ const handleCopy = async (label: string, value: string) => {
                 class="flex min-w-0 flex-1 items-center gap-2 rounded-md border bg-muted/50 px-3 py-2"
               >
                 <code class="min-w-0 flex-1 truncate text-sm">{{ item.value }}</code>
-                <button
-                  type="button"
+                <Button
+                  variant="ghost"
+                  size="icon"
                   title="复制"
                   class="inline-flex shrink-0 cursor-pointer items-center justify-center text-muted-foreground hover:text-foreground"
                   @click="handleCopy(item.label, item.value)"
@@ -275,7 +278,7 @@ const handleCopy = async (label: string, value: string) => {
                     class="size-4 text-green-600"
                   />
                   <Icon v-else name="Copy01Icon" class="size-4" />
-                </button>
+                </Button>
               </div>
             </div>
           </div>

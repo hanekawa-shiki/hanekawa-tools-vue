@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import avatarImg from '@/assest/avatar.jpeg';
 import ModeToggle from '@/components/mode-toggle.vue';
 import NavMain from '@/components/nav-main.vue';
+import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import {
   Sidebar,
@@ -50,12 +51,9 @@ const routeMenuItems = computed(() => getRouteMenuItems());
         <div class="flex w-full items-center justify-between gap-2 px-4">
           <div class="flex h-full items-center gap-2">
             <SidebarTrigger class="size-6" />
-            <button
-              class="inline-flex size-8 items-center justify-center rounded-md text-sm font-medium hover:bg-muted hover:text-foreground"
-              @click="router.push('/home')"
-            >
+            <Button variant="ghost" size="icon" class="size-8" @click="router.push('/home')">
               <Icon name="HomeIcon" :stroke-width="2" class="size-6" />
-            </button>
+            </Button>
           </div>
           <div class="flex items-center gap-2">
             <a

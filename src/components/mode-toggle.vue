@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useTheme } from '@/components/theme-provider.vue';
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,14 +14,12 @@ const { theme, setTheme } = useTheme();
 <template>
   <DropdownMenu>
     <DropdownMenuTrigger as-child>
-      <button
-        class="inline-flex size-8 items-center justify-center rounded-md text-sm font-medium hover:bg-muted hover:text-foreground"
-      >
+      <Button variant="ghost" size="icon">
         <Icon v-if="theme === 'light'" name="Sun01Icon" class="size-6" :stroke-width="2" />
         <Icon v-else-if="theme === 'dark'" name="Moon02Icon" class="size-6" :stroke-width="2" />
         <Icon v-else name="RepeatIcon" class="size-6" :stroke-width="2" />
         <span class="sr-only">切换主题</span>
-      </button>
+      </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent align="end">
       <DropdownMenuItem @click="setTheme('light')">
