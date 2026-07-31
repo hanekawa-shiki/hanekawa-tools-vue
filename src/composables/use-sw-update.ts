@@ -24,11 +24,18 @@ export function useSWUpdate() {
     }
   }
 
-  async function applyUpdate() {
+  function applyUpdate() {
     if (!registration.value?.waiting) {
       return;
     }
     console.warn('[PWA] 正在应用更新...');
+    navigator.serviceWorker.addEventListener(
+      'controllerchange',
+      () => {
+        window.location.reload();
+      },
+      { once: true }
+    );
     registration.value.waiting.postMessage({ type: 'SKIP_WAITING' });
     needRefresh.value = false;
   }
