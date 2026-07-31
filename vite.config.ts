@@ -5,7 +5,6 @@ import vue from '@vitejs/plugin-vue';
 import { defineConfig, loadEnv } from 'vite';
 import viteCompression from 'vite-plugin-compression';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
-import { VitePWA } from 'vite-plugin-pwa';
 import { fontSwitch } from './vite-plugins/fontSwitch.ts';
 import htmlBuildTime from './vite-plugins/htmlBuildTime.ts';
 
@@ -25,80 +24,7 @@ export default defineConfig(({ mode }) => {
       }),
       htmlBuildTime(),
       fontSwitch(mode),
-      VitePWA({
-        registerType: 'prompt',
-        includeAssets: ['favicon.svg'],
-        manifest: {
-          name: 'hanekawa-tools',
-          short_name: 'hanekawa-tools',
-          description: '日常小工具集合 - 万年历、油价查询、种子转磁力链、发票合并等实用工具',
-          lang: 'zh-CN',
-          theme_color: '#ffffff',
-          background_color: '#ffffff',
-          display: 'standalone',
-          scope: '/',
-          start_url: '/',
-          icons: [
-            {
-              src: '/icon-192.png',
-              sizes: '192x192',
-              type: 'image/png',
-              purpose: 'any',
-            },
-            {
-              src: '/icon-512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'any',
-            },
-            {
-              src: '/icon-512.png',
-              sizes: '512x512',
-              type: 'image/png',
-              purpose: 'maskable',
-            },
-            {
-              src: '/favicon.svg',
-              sizes: 'any',
-              type: 'image/svg+xml',
-              purpose: 'any',
-            },
-          ],
-        },
-        workbox: {
-          globPatterns: ['**/*.{js,css,html,svg,png,woff,woff2}'],
-          runtimeCaching: [
-            {
-              urlPattern: /^https:\/\/cdnjs\.cloudflare\.com\/.*$/,
-              handler: 'StaleWhileRevalidate',
-              options: {
-                cacheName: 'cdn-fonts-cache',
-                expiration: {
-                  maxEntries: 10,
-                  maxAgeSeconds: 60 * 60 * 24 * 30,
-                },
-              },
-            },
-            {
-              urlPattern: /\/api\//,
-              handler: 'NetworkFirst',
-              options: {
-                cacheName: 'api-cache',
-                expiration: {
-                  maxEntries: 50,
-                  maxAgeSeconds: 60 * 60 * 24,
-                },
-                networkTimeoutSeconds: 5,
-              },
-            },
-          ],
-          navigateFallback: '/index.html',
-          navigateFallbackDenylist: [/^\/api\//],
-        },
-        devOptions: {
-          enabled: false,
-        },
-      }),
+
       ...(mode !== 'cf'
         ? [
             viteCompression({
