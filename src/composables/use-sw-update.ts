@@ -7,7 +7,7 @@ export function useSWUpdate() {
     needRefresh.value = true;
   }
 
-  function applyUpdate() {
+  async function applyUpdate() {
     if (!needRefresh.value) {
       return;
     }
