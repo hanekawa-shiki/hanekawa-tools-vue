@@ -76,9 +76,9 @@ hanekawa-tools-vue/
 ├── src/
 │   ├── api/              # API 接口层
 │   ├── components/       # 公共组件 + shadcn-vue
-│   │   ├── icon.vue      # 图标封装组件（32 个图标）
+│   │   ├── icon.vue      # 图标封装组件（34 个图标）
 │   │   ├── month-picker.vue  # 月份选择器
-│   │   └── sw-update-toast.vue  # PWA 版本更新提示
+│   │   └── ...           # mode-toggle / nav-main / page-header / theme-provider 等
 │   ├── composables/      # Vue 组合式函数
 │   ├── data/             # 数据层（节假日等）
 │   ├── layout/           # 布局组件
