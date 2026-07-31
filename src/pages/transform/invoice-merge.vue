@@ -69,7 +69,7 @@ const invoices = ref<InvoicePage[]>([]);
 const perPage = ref<2 | 4>(4);
 const loading = ref(false);
 const exporting = ref(false);
-const dragIndex = ref<number | null>(null);
+const dragId = ref<string | null>(null);
 const previewModalVisible = ref(false);
 const previewUrl = ref('');
 
@@ -146,21 +146,27 @@ const handleClearAll = () => {
 };
 
 // Simple drag-and-drop using native HTML5 drag
-const handleDragStart = (index: number) => {
-  dragIndex.value = index;
+const handleDragStart = (id: string) => {
+  dragId.value = id;
 };
 const handleDragOver = (e: DragEvent) => {
   e.preventDefault();
 };
-const handleDrop = (targetIndex: number) => {
-  if (dragIndex.value === null || dragIndex.value === targetIndex) {
+const handleDrop = (targetId: string) => {
+  if (dragId.value === null || dragId.value === targetId) {
     return;
   }
   const arr = [...invoices.value];
-  const [moved] = arr.splice(dragIndex.value, 1);
-  arr.splice(targetIndex, 0, moved);
+  const fromIndex = arr.findIndex((inv) => inv.id === dragId.value);
+  const toIndex = arr.findIndex((inv) => inv.id === targetId);
+  if (fromIndex === -1 || toIndex === -1) {
+    return;
+  }
+  const temp = arr[fromIndex];
+  arr[fromIndex] = arr[toIndex];
+  arr[toIndex] = temp;
   invoices.value = arr;
-  dragIndex.value = null;
+  dragId.value = null;
 };
 
 const handleExport = async () => {
@@ -297,10 +303,10 @@ const closePreview = () => {
               :key="inv.id"
               draggable="true"
               class="group relative flex cursor-grab flex-col items-center overflow-hidden rounded-lg border bg-muted/30 p-2 transition-all"
-              :class="dragIndex === (pageIdx - 1) * perPage + slotIdx ? 'scale-95 opacity-40' : ''"
-              @dragstart="handleDragStart((pageIdx - 1) * perPage + slotIdx)"
+              :class="dragId === inv.id ? 'scale-95 opacity-40' : ''"
+              @dragstart="handleDragStart(inv.id)"
               @dragover="handleDragOver"
-              @drop="handleDrop((pageIdx - 1) * perPage + slotIdx)"
+              @drop="handleDrop(inv.id)"
             >
               <div
                 class="absolute top-1 left-1 z-10 rounded bg-primary/80 px-1.5 py-0.5 text-[10px] font-medium text-primary-foreground"
