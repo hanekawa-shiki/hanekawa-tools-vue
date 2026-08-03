@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { Component } from 'vue';
 import {
   ArrowLeftIcon,
   ArrowLeftRightIcon,
@@ -49,7 +50,7 @@ const props = withDefaults(
   }
 );
 
-const iconMap: Record<string, unknown> = {
+const iconMap: Record<string, Component> = {
   HomeIcon,
   BinocularsIcon,
   CalendarIcon,
@@ -86,7 +87,7 @@ const iconMap: Record<string, unknown> = {
   FileInputIcon,
 };
 
-const iconData = computed(() => iconMap[props.name] as any);
+const iconData = computed(() => iconMap[props.name]);
 </script>
 
 <template>

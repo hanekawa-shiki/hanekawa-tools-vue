@@ -8,7 +8,7 @@ function transformDays(days: HolidayData[]): Holiday[] {
   return days.map((d) => ({
     name: d.name,
     date: d.date.slice(5),
-    isWorkday: d.isOffDay === false ? true : undefined,
+    isWorkday: d.isOffDay ? undefined : true,
   }));
 }
 

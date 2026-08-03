@@ -1,12 +1,5 @@
 import { dirMeta, pageMeta } from '@/router/config';
 
-export interface AutoRouteItem {
-  path: string;
-  title: string;
-  icon?: string;
-  children?: AutoRouteItem[];
-}
-
 export interface NavMainItem {
   title: string;
   url: string;
@@ -29,24 +22,6 @@ function deriveTitleFromPath(path: string): string {
 
 function deriveTitleFromDirName(dirName: string): string {
   return dirName.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
-}
-
-export function getAutoRouteItems(): AutoRouteItem[] {
-  const items: AutoRouteItem[] = [];
-
-  for (const [path, meta] of Object.entries(pageMeta)) {
-    if (meta.hidden) {
-      continue;
-    }
-
-    items.push({
-      path,
-      title: meta.title ?? deriveTitleFromPath(path),
-      icon: meta.icon,
-    });
-  }
-
-  return items;
 }
 
 export function getRouteMenuItems(): NavMainItem[] {

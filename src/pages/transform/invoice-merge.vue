@@ -27,7 +27,7 @@ const PER_PAGE_CONFIG = [
 interface InvoicePage {
   id: string;
   fileName: string;
-  file: File;
+  bytes: Uint8Array;
   previewDataUrl?: string;
 }
 
@@ -105,12 +105,12 @@ const handleFileSelect = async (e: Event) => {
     }
     try {
       const bytes = await readFileAsArrayBuffer(file);
-      const previewUrl = await renderPreview(bytes);
+      const previewDataUrl = await renderPreview(bytes);
       newInvoices.push({
         id: `${file.name}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
         fileName: file.name,
-        file,
-        previewDataUrl: previewUrl,
+        bytes,
+        previewDataUrl,
       });
     } catch {
       toast.error(`读取失败：${file.name}`);
@@ -196,8 +196,7 @@ const handleExport = async () => {
         const invoice = invoices.value[startIdx + slotIdx];
         const slot = slots[slotIdx];
         try {
-          const pdfBytes = await readFileAsArrayBuffer(invoice.file);
-          const srcDoc = await PDFDocument.load(pdfBytes);
+          const srcDoc = await PDFDocument.load(invoice.bytes);
           const [embeddedPage] = await mergedDoc.embedPdf(srcDoc, [0]);
           const origPage = srcDoc.getPage(0);
           const { width: origW, height: origH } = origPage.getSize();

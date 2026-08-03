@@ -137,7 +137,7 @@ async function copyMime(mime: string) {
         </div>
         <div :style="{ height: `${totalHeight}px`, width: '100%', position: 'relative' }">
           <div
-            v-for="virtualRow in results.slice(visibleRange.start, visibleRange.end)"
+            v-for="(virtualRow, rowIndex) in results.slice(visibleRange.start, visibleRange.end)"
             :key="virtualRow.mime"
             :style="{
               position: 'absolute',
@@ -145,7 +145,7 @@ async function copyMime(mime: string) {
               left: 0,
               width: '100%',
               height: `${itemHeight}px`,
-              transform: `translateY(${results.indexOf(virtualRow) * itemHeight}px)`,
+              transform: `translateY(${(visibleRange.start + rowIndex) * itemHeight}px)`,
             }"
             class="flex items-center border-b text-sm transition-colors hover:bg-muted/50"
           >

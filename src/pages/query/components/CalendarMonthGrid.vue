@@ -26,9 +26,10 @@ const weekdayNames = computed(() => getWeekdayNames(props.weekStart));
 const adjustedStart = computed(() =>
   props.weekStart === 6 ? (startDayOfWeek.value + 6) % 7 : startDayOfWeek.value
 );
-const cells = computed(() =>
-  buildCalendarCells(props.year, props.month, daysInMonth.value, props.selectedDate)
-);
+const cells = computed(() => {
+  void props.holidaysLoaded;
+  return buildCalendarCells(props.year, props.month, daysInMonth.value, props.selectedDate);
+});
 const totalCells = computed(() => adjustedStart.value + daysInMonth.value);
 </script>
 

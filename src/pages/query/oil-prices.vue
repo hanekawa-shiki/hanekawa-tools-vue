@@ -3,24 +3,13 @@ import { computed, ref } from 'vue';
 import { fetchOilPriceApi } from '@/api';
 import PageHeader from '@/components/page-header.vue';
 import { Skeleton } from '@/components/ui/skeleton';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import OilPriceTable from './components/OilPriceTable.vue';
 
 const SKELETON_COUNT = 8;
 
 const prices = ref<OilPriceCityData[]>([]);
 const loading = ref(true);
 const updateDate = ref('');
-
-function formatPrice(price: number): string {
-  return price.toFixed(2);
-}
 
 const loadPrices = async () => {
   loading.value = true;
@@ -64,116 +53,11 @@ const rightData = computed(() => prices.value.slice(midpoint.value));
       </template>
       <template v-else>
         <div class="lg:hidden">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead class="h-12 text-left font-medium whitespace-nowrap"> 省/市 </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  92#汽油
-                </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  95#汽油
-                </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  0#柴油
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow
-                v-for="item in prices"
-                :key="item.dim_id"
-                :class="item.highlight ? 'bg-primary/10' : ''"
-              >
-                <TableCell class="font-medium">
-                  {{ item.city_name }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v92) }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v95) }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v0) }}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <OilPriceTable :items="prices" />
         </div>
         <div class="hidden lg:grid lg:grid-cols-2 lg:gap-6">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead class="h-12 text-left font-medium whitespace-nowrap"> 省/市 </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  92#汽油
-                </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  95#汽油
-                </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  0#柴油
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow
-                v-for="item in leftData"
-                :key="item.dim_id"
-                :class="item.highlight ? 'bg-primary/10' : ''"
-              >
-                <TableCell class="font-medium">
-                  {{ item.city_name }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v92) }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v95) }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v0) }}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead class="h-12 text-left font-medium whitespace-nowrap"> 省/市 </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  92#汽油
-                </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  95#汽油
-                </TableHead>
-                <TableHead class="h-12 text-right font-medium whitespace-nowrap">
-                  0#柴油
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow
-                v-for="item in rightData"
-                :key="item.dim_id"
-                :class="item.highlight ? 'bg-primary/10' : ''"
-              >
-                <TableCell class="font-medium">
-                  {{ item.city_name }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v92) }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v95) }}
-                </TableCell>
-                <TableCell class="text-right">
-                  {{ formatPrice(item.v0) }}
-                </TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+          <OilPriceTable :items="leftData" />
+          <OilPriceTable :items="rightData" />
         </div>
       </template>
     </div>

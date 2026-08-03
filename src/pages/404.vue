@@ -107,28 +107,33 @@ class KeyController {
   tiltLeft = false;
   tiltRight = false;
 
+  private handleKeyDown = (e: KeyboardEvent) => {
+    if ([37, 39, 65, 68].includes(e.keyCode)) {
+      this.keyState[e.keyCode] = true;
+      e.preventDefault();
+    }
+  };
+
+  private handleKeyUp = (e: KeyboardEvent) => {
+    if ([37, 39, 65, 68].includes(e.keyCode)) {
+      this.keyState[e.keyCode] = false;
+      e.preventDefault();
+    }
+  };
+
   constructor() {
-    const keyCode = [37, 39, 65, 68];
-    window.addEventListener('keydown', (e) => {
-      for (const code of keyCode) {
-        if (code === e.keyCode) {
-          this.keyState[e.keyCode] = true;
-          e.preventDefault();
-        }
-      }
-    });
-    window.addEventListener('keyup', (e) => {
-      for (const code of keyCode) {
-        if (code === e.keyCode) {
-          this.keyState[e.keyCode] = false;
-          e.preventDefault();
-        }
-      }
-    });
+    window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('keyup', this.handleKeyUp);
 
     if (!this.isIOS) {
       window.addEventListener('deviceorientation', this.handleOrientation);
     }
+  }
+
+  dispose() {
+    window.removeEventListener('keydown', this.handleKeyDown);
+    window.removeEventListener('keyup', this.handleKeyUp);
+    window.removeEventListener('deviceorientation', this.handleOrientation);
   }
 
   requestGyroPermission() {
@@ -136,8 +141,8 @@ class KeyController {
       return;
     }
     this.gyroRequested = true;
-    (DeviceOrientationEvent as any)
-      .requestPermission()
+    getDeviceOrientationEvent()
+      .requestPermission?.()
       .then((state: string) => {
         if (state === 'granted') {
           window.addEventListener('deviceorientation', this.handleOrientation);
@@ -396,7 +401,7 @@ class Game {
     this.invaders = [];
   }
 
-  init(kills: { value: number }, invaderDownTimer: ReturnType<typeof setInterval> | undefined) {
+  init(kills: { value: number }): ReturnType<typeof setInterval> {
     this.level = -1;
     this.lost = false;
     this.player = new Player(this.gameSize, this.keyboarder);
@@ -407,14 +412,11 @@ class Game {
     this.spawnDelayCounter = this.invaderSpawnDelay;
     kills.value = 0;
 
-    if (invaderDownTimer === undefined) {
-      return setInterval(() => {
-        for (const invader of this.invaders) {
-          invader.move(this.gameSize, this);
-        }
-      }, 1000);
-    }
-    return invaderDownTimer;
+    return setInterval(() => {
+      for (const invader of this.invaders) {
+        invader.move(this.gameSize, this);
+      }
+    }, 1000);
   }
 
   update(kills: { value: number }) {
@@ -523,8 +525,6 @@ class Game {
   }
 }
 
-const gameLost = ref(false);
-
 onMounted(() => {
   const maybeCanvas = canvasRef.value;
   if (!maybeCanvas) {
@@ -532,12 +532,14 @@ onMounted(() => {
   }
   const canvas: HTMLCanvasElement = maybeCanvas;
 
-  let gameSize: GameSize;
+  let gameSize: GameSize = { width: 600, height: 300 };
   const kills = { value: 0 };
   let invaderDownTimer: ReturnType<typeof setInterval> | undefined;
+  let invaderCanvas: HTMLCanvasElement;
   let game: Game;
   let animFrameId: number;
   const keyboarder = new KeyController();
+  const screen = canvas.getContext('2d')!;
 
   function getColors(): GameColors {
     if (isDark.value) {
@@ -585,87 +587,13 @@ onMounted(() => {
     return c;
   }
 
-  let invaderCanvas = createInvaderCanvas();
-
-  const screen = canvas.getContext('2d')!;
-  initGameStart();
-  loop();
-
-  function handleCanvasClick(e: MouseEvent) {
-    if (!game.lost) {
-      return;
+  function startGame() {
+    if (invaderDownTimer !== undefined) {
+      clearInterval(invaderDownTimer);
     }
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-    const btn = game.restartBtnRect;
-    if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-      gameLost.value = false;
-      invaderCanvas = createInvaderCanvas();
-      game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
-      if (invaderDownTimer) {
-        clearInterval(invaderDownTimer);
-      }
-      invaderDownTimer = game.init(kills, invaderDownTimer);
-    }
-  }
-
-  canvas.addEventListener('click', handleCanvasClick);
-  canvas.addEventListener('mousemove', (e: MouseEvent) => {
-    if (!game.lost) {
-      canvas.style.cursor = 'default';
-      return;
-    }
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const x = (e.clientX - rect.left) * scaleX;
-    const y = (e.clientY - rect.top) * scaleY;
-    const btn = game.restartBtnRect;
-    canvas.style.cursor =
-      x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h ? 'pointer' : 'default';
-  });
-  canvas.addEventListener('touchend', (e: TouchEvent) => {
-    if (!game.lost || !e.changedTouches.length) {
-      return;
-    }
-    const touch = e.changedTouches[0];
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = canvas.width / rect.width;
-    const scaleY = canvas.height / rect.height;
-    const x = (touch.clientX - rect.left) * scaleX;
-    const y = (touch.clientY - rect.top) * scaleY;
-    const btn = game.restartBtnRect;
-    if (x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h) {
-      e.preventDefault();
-      gameLost.value = false;
-      invaderCanvas = createInvaderCanvas();
-      game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
-      if (invaderDownTimer) {
-        clearInterval(invaderDownTimer);
-      }
-      invaderDownTimer = game.init(kills, invaderDownTimer);
-    }
-  });
-  canvas.addEventListener('touchstart', () => {
-    keyboarder.requestGyroPermission();
-  });
-  document.addEventListener(
-    'touchstart',
-    () => {
-      keyboarder.requestGyroPermission();
-    },
-    { once: true }
-  );
-
-  function loop() {
-    game.player.keyboarder.updateTouchState(touchState.value);
-    game.update(kills);
-    game.draw(screen, kills.value);
-    gameLost.value = game.lost;
-    animFrameId = requestAnimationFrame(loop);
+    invaderCanvas = createInvaderCanvas();
+    game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
+    invaderDownTimer = game.init(kills);
   }
 
   function initGameStart() {
@@ -682,33 +610,103 @@ onMounted(() => {
       canvas.height = 300;
       gameSize = { width: 600, height: 300 };
     }
-
-    game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
-    if (invaderDownTimer) {
-      clearInterval(invaderDownTimer);
-    }
-    invaderDownTimer = game.init(kills, invaderDownTimer);
+    startGame();
   }
 
-  watch(isDark, () => {
-    invaderCanvas = createInvaderCanvas();
-    game = new Game(gameSize, invaderCanvas, getColors(), keyboarder);
-    if (invaderDownTimer) {
-      clearInterval(invaderDownTimer);
-    }
-    invaderDownTimer = game.init(kills, invaderDownTimer);
-  });
+  function canvasPointFromEvent(clientX: number, clientY: number): Coordinates {
+    const rect = canvas.getBoundingClientRect();
+    return {
+      x: (clientX - rect.left) * (canvas.width / rect.width),
+      y: (clientY - rect.top) * (canvas.height / rect.height),
+    };
+  }
 
-  window.addEventListener('resize', initGameStart);
+  function isInRestartBtn(x: number, y: number): boolean {
+    const btn = game.restartBtnRect;
+    return x >= btn.x && x <= btn.x + btn.w && y >= btn.y && y <= btn.y + btn.h;
+  }
+
+  function handleRestart(clientX: number, clientY: number) {
+    if (!game.lost) {
+      return;
+    }
+    const { x, y } = canvasPointFromEvent(clientX, clientY);
+    if (isInRestartBtn(x, y)) {
+      startGame();
+    }
+  }
+
+  function handleCanvasClick(e: MouseEvent) {
+    handleRestart(e.clientX, e.clientY);
+  }
+
+  function handleCanvasMouseMove(e: MouseEvent) {
+    if (!game.lost) {
+      canvas.style.cursor = 'default';
+      return;
+    }
+    const { x, y } = canvasPointFromEvent(e.clientX, e.clientY);
+    canvas.style.cursor = isInRestartBtn(x, y) ? 'pointer' : 'default';
+  }
+
+  function handleCanvasTouchEnd(e: TouchEvent) {
+    if (!game.lost || e.changedTouches.length === 0) {
+      return;
+    }
+    const touch = e.changedTouches[0];
+    const { x, y } = canvasPointFromEvent(touch.clientX, touch.clientY);
+    if (isInRestartBtn(x, y)) {
+      e.preventDefault();
+      startGame();
+    }
+  }
+
+  function handleCanvasTouchStart() {
+    keyboarder.requestGyroPermission();
+  }
+
+  function handleDocumentTouchStart() {
+    keyboarder.requestGyroPermission();
+  }
+
+  function handleResize() {
+    initGameStart();
+  }
+
+  function loop() {
+    game.player.keyboarder.updateTouchState(touchState.value);
+    game.update(kills);
+    game.draw(screen, kills.value);
+    animFrameId = requestAnimationFrame(loop);
+  }
+
+  initGameStart();
+  loop();
+
+  canvas.addEventListener('click', handleCanvasClick);
+  canvas.addEventListener('mousemove', handleCanvasMouseMove);
+  canvas.addEventListener('touchend', handleCanvasTouchEnd);
+  canvas.addEventListener('touchstart', handleCanvasTouchStart);
+  document.addEventListener('touchstart', handleDocumentTouchStart, { once: true });
+  window.addEventListener('resize', handleResize);
+
+  watch(isDark, () => {
+    startGame();
+  });
 
   onUnmounted(() => {
     canvas.removeEventListener('click', handleCanvasClick);
+    canvas.removeEventListener('mousemove', handleCanvasMouseMove);
+    canvas.removeEventListener('touchend', handleCanvasTouchEnd);
+    canvas.removeEventListener('touchstart', handleCanvasTouchStart);
+    window.removeEventListener('resize', handleResize);
     if (invaderDownTimer) {
       clearInterval(invaderDownTimer);
     }
     if (animFrameId) {
       cancelAnimationFrame(animFrameId);
     }
+    keyboarder.dispose();
   });
 });
 </script>

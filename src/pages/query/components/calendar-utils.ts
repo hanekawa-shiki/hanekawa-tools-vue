@@ -33,12 +33,10 @@ export function getWeekOfYear(dateStr: string): number {
   return dayjs(dateStr).isoWeek();
 }
 
-export function getLunarDay(dateStr: string): string {
-  const d = lunisolar(dateStr);
-  const day = d.lunar.day;
+function getLunarDay(d: lunisolar.Lunisolar): string {
   const monthName = d.format('lM');
   const dayName = d.format('lD');
-  return day === 1 ? monthName : dayName;
+  return d.lunar.day === 1 ? monthName : dayName;
 }
 
 export function getLunarFullInfo(dateStr: string) {
@@ -76,8 +74,9 @@ export function buildCalendarCells(
     const isToday = now.getFullYear() === year && now.getMonth() === month && now.getDate() === d;
     const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
 
-    const lunar = getLunarDay(dateStr);
-    const solarTerm = lunisolar(dateStr).solarTerm?.toString() ?? '';
+    const lunarDate = lunisolar(dateStr);
+    const lunar = getLunarDay(lunarDate);
+    const solarTerm = lunarDate.solarTerm?.toString() ?? '';
     const holidayInfo = getHolidayInfo(month, d, year);
 
     const isSelected = selectedDate === dateStr;
@@ -87,16 +86,9 @@ export function buildCalendarCells(
     const isWorkday = holidayInfo?.isWorkday === true;
     const isHoliday = holidayInfo !== undefined && !isWorkday;
 
+    const prevHoliday = d > 1 ? getHolidayInfo(month, d - 1, year) : undefined;
     const showHolidayName =
-      holidayInfo !== undefined &&
-      !isWorkday &&
-      (() => {
-        if (d <= 1) {
-          return true;
-        }
-        const prevHoliday = getHolidayInfo(month, d - 1, year);
-        return prevHoliday?.name !== holidayInfo.name;
-      })();
+      holidayInfo !== undefined && !isWorkday && (d <= 1 || prevHoliday?.name !== holidayInfo.name);
 
     result.push({
       day: d,
