@@ -1,6 +1,6 @@
 # 项目交接文档
 
-> 最后更新：2026-07-31
+> 最后更新：2026-08-05
 > 仓库地址：git@github.com:hanekawa-shiki/hanekawa-tools-vue.git
 
 ---
@@ -20,11 +20,11 @@
 | 提示框       | vue-sonner                             | 2.0.9         |
 | 日期         | dayjs                                  | 1.11.21       |
 | 农历         | lunisolar                              | 2.6.0         |
+| Media 数据   | mime-db                                | 1.54.0        |
 | Torrent 解析 | parse-torrent                          | 11.0.24       |
 | PDF 合并     | pdf-lib                                | 1.17.1        |
 | 拖拽排序     | 原生 HTML5 Drag and Drop               | -             |
 | 模糊搜索     | fuse.js                                | 7.5.0         |
-| 表格         | @tanstack/vue-table                    | 8.21.3        |
 | 组合式工具   | @vueuse/core                           | 14.4.0        |
 | 本地字体     | lxgw-wenkai-webfont                    | 1.7.0         |
 | PWA          | vite-plugin-pwa + workbox-window       | 1.3.0 / 7.4.1 |
@@ -69,7 +69,7 @@ hanekawa-tools-vue/
 │   │       ├── sidebar/           # 侧边栏核心组件（24 个子组件）
 │   │       ├── skeleton/          # Skeleton 骨架屏
 │   │       ├── sonner/            # Toast 通知（适配 useTheme）
-│   │       ├── table/             # Table 表格组件（9 个子组件 + utils）
+│   │       ├── table/             # Table 表格组件（9 个子组件，含 TableEmpty 空状态）
 │   │       └── tooltip/           # Tooltip 提示
 │   ├── composables/               # Vue 组合式函数
 │   │   ├── use-auto-routes.ts     # 自动生成导航菜单项
@@ -86,15 +86,16 @@ hanekawa-tools-vue/
 │   │   ├── index.vue              # 首页（工具卡片列表，读取 config.pageMeta）
 │   │   ├── query/
 │   │   │   ├── calendar.vue       # 日历主页面（组合子组件）
-│   │   │   ├── oil-prices.vue     # 油价页面（全国各地油价查询，PC 双列/移动单列）
-│   │   │   ├── media-types.vue    # Media Types 查询页面（Fuse.js 模糊搜索 + 虚拟滚动）
-│   │   │   └── components/        # 日历子组件（不生成路由菜单）
+│   │   │   ├── oil-prices.vue     # 油价页面（全国油价，PC 双列/移动单列，复用 OilPriceTable）
+│   │   │   ├── media-types.vue    # Media Types 查询页面（Fuse.js 模糊搜索 + 手写虚拟滚动）
+│   │   │   └── components/        # 日历等子组件（不生成路由菜单）
 │   │   │       ├── calendar-utils.ts      # 工具函数 + CalendarCell 类型 + 常量
 │   │   │       ├── CalendarDateDetail.vue  # 右侧日期详情面板
 │   │   │       ├── CalendarDayCell.vue     # 单个日期格子
 │   │   │       ├── CalendarLegend.vue      # 图例
 │   │   │       ├── CalendarMonthGrid.vue   # 月历网格
-│   │   │       └── CalendarNav.vue         # 导航栏（Popover + MonthPicker 年月选择 + 一周起始日）
+│   │   │       ├── CalendarNav.vue         # 导航栏（Popover + MonthPicker 年月选择 + 一周起始日）
+│   │   │       └── OilPriceTable.vue       # 油价表格组件（TableEmpty 空状态 + Skeleton 加载）
 │   │   └── transform/
 │   │       ├── torrent2magnet.vue   # 种子转磁力链工具（支持逐条删除 + 清除全部）
 │   │       ├── invoice-merge.vue    # 发票合并工具（HTML5 拖拽排序 + pdf-lib 导出 A4 PDF）
@@ -115,10 +116,10 @@ hanekawa-tools-vue/
 
 ### 路由系统
 
-- 路由定义在 `src/router/config.ts` 的 `routeConfig` 数组中，`src/main.ts` 中创建 router（`createWebHashHistory`）并组装路由
-- 菜单配置在 `src/router/config.ts` 的 `pageMeta`（页面级：title/icon/hidden）和 `dirMeta`（目录级：title/icon/isActive）
-- 导航菜单由 `src/composables/use-auto-routes.ts` 根据 `pageMeta` 自动生成
-- **新增页面**：在 `src/pages/` 下创建 `.vue` 文件，然后在 `src/router/config.ts` 中添加 routeConfig 路由和 pageMeta
+- 路由配置集中在 `src/router/config.ts`：`toolPages` 数组为单一数据源，统一派生 `pageMeta`（页面级：title/description/icon/hidden）和 `routeConfig`（路由定义，path/name/meta/component），`dirMeta` 配置目录级菜单（title/icon/isActive）
+- `src/main.ts` 中创建 router（`createWebHashHistory`），将 `routeConfig` 挂载到 `/` 布局路由下，并兜底 404
+- 导航菜单由 `src/composables/use-auto-routes.ts` 根据 `pageMeta` + `dirMeta` 自动生成
+- **新增页面**：在 `src/pages/` 下创建 `.vue` 文件，然后在 `src/router/config.ts` 的 `toolPages` 数组中添加一项即可（路由、菜单、首页卡片自动生效）
 
 ### API 层架构
 
@@ -155,15 +156,16 @@ src/data/holidays.ts（节假日业务逻辑：内存缓存 + 数据转换 + get
 
 Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆分为独立 chunk：
 
-| Chunk 名          | 包含的库                                   |
-| ----------------- | ------------------------------------------ |
-| `vendor-vue`      | vue, vue-router, @vueuse/core              |
-| `vendor-reka`     | reka-ui                                    |
-| `vendor-pdf`      | pdf-lib                                    |
-| `vendor-date`     | dayjs, lunisolar                           |
-| `vendor-icons`    | @hugeicons/core-free-icons, @hugeicons/vue |
-| `vendor-torrent`  | parse-torrent                              |
-| `vendor-tanstack` | @tanstack/vue-table                        |
+| Chunk 名          | 包含的库                                     |
+| ----------------- | -------------------------------------------- |
+| `vendor-vue`      | vue, vue-router, @vueuse/core                |
+| `vendor-reka`     | reka-ui                                      |
+| `vendor-pdf`      | pdf-lib                                      |
+| `vendor-sortable` | sortablejs, vuedraggable（预留，当前未使用） |
+| `vendor-date`     | dayjs, lunisolar                             |
+| `vendor-icons`    | @hugeicons/core-free-icons, @hugeicons/vue   |
+| `vendor-torrent`  | parse-torrent                                |
+| `vendor-tanstack` | @tanstack/*（预留，依赖已移除）              |
 
 所有页面组件通过动态 `import()` 按路由懒加载。
 
@@ -173,7 +175,6 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 - 通过 `src/components/icon.vue` 封装，接收 `name` 字符串（如 `'CalendarIcon'`）渲染图标
 - 当前注册了 **34 个图标**，涵盖导航、操作、状态等类别
 - 图标大小由 CSS 类控制（如 `size-4`、`size-8`），不使用 `size` prop
-- shadcn-vue 内部组件使用 `@lucide/vue` 图标
 
 ---
 
@@ -190,7 +191,8 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 | 日历万年历       | ✅ 完成 | `src/pages/query/calendar.vue` + 5个子组件（Calendar* 前缀）                                          |
 | 日历节假日接口   | ✅ 完成 | `src/data/holidays.ts`（从 worker API 获取 + 内存缓存）                                               |
 | 油价查询         | ✅ 完成 | `src/pages/query/oil-prices.vue`（全国油价，PC 双列/移动单列）                                        |
-| Media Types 查询 | ✅ 完成 | `src/pages/query/media-types.vue`（Fuse.js 模糊搜索 + 虚拟滚动）                                      |
+| 油价表格组件     | ✅ 完成 | `src/pages/query/components/OilPriceTable.vue`（从 oil-prices.vue 提取复用，TableEmpty 空状态）       |
+| Media Types 查询 | ✅ 完成 | `src/pages/query/media-types.vue`（Fuse.js 模糊搜索 + 手写虚拟滚动）                                  |
 | 种子转磁力链     | ✅ 完成 | `src/pages/transform/torrent2magnet.vue`（含逐条删除 + 清除全部）                                     |
 | 发票合并工具     | ✅ 完成 | `src/pages/transform/invoice-merge.vue`（HTML5 拖拽排序 + pdf-lib PDF 合并导出）                      |
 | 取色器           | ✅ 完成 | `src/pages/transform/color-picker.vue`（HEX/RGB/HSL/HSV/CMYK）                                        |
@@ -207,11 +209,13 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 
 ### 🔧 已优化的问题
 
-| 优化项           | 详情                                                                           |
-| ---------------- | ------------------------------------------------------------------------------ |
-| 侧边栏重构       | 使用 shadcn-vue 内置 Sidebar 组件，替代手写实现                                |
-| 图标系统重构     | 通过 `icon.vue` 封装 hugeicons，CSS 控制大小而非 prop                          |
-| 项目地址集中管理 | `package.json` 的 `homepage` 字段统一管理项目地址，`layout/index.vue` 动态导入 |
+| 优化项           | 详情                                                                                        |
+| ---------------- | ------------------------------------------------------------------------------------------- |
+| 侧边栏重构       | 使用 shadcn-vue 内置 Sidebar 组件，替代手写实现                                             |
+| 图标系统重构     | 通过 `icon.vue` 封装 hugeicons，CSS 控制大小而非 prop                                       |
+| 项目地址集中管理 | `package.json` 的 `homepage` 字段统一管理项目地址，`layout/index.vue` 动态导入              |
+| 路由配置重构     | `toolPages` 单一数据源统一派生 `pageMeta` + `routeConfig`，新增页面只需一处配置             |
+| 移除未用依赖     | 移除 `@tanstack/vue-table`、`@lucide/vue`、`@internationalized/date` 及 `ui/table/utils.ts` |
 
 ### 🟡 待完善 / 已知问题
 
@@ -229,14 +233,14 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 
 > 我正在维护一个名为 `hanekawa-tools-vue` 的 Vue 3 工具集网站（GitHub 仓库：`hanekawa-shiki/hanekawa-tools-vue`）。
 >
-> **技术栈**：Vue 3.5.40 + Vite 8.2.0 + TypeScript ~6.0.3 + Tailwind CSS 4.3.3 + shadcn-vue (reka-ui 2.10.1) + Hugeicons (4.2.3) + vue-router 5.2.0 + axios 1.19.0 + dayjs 1.11.21 + lunisolar 2.6.0 + vue-sonner 2.0.9 + vite-plugin-pwa 1.3.0 + workbox-window 7.4.1
+> **技术栈**：Vue 3.5.40 + Vite 8.2.0 + TypeScript ~6.0.3 + Tailwind CSS 4.3.3 + shadcn-vue (reka-ui 2.10.1) + Hugeicons (4.2.3) + vue-router 5.2.0 + axios 1.19.0 + dayjs 1.11.21 + lunisolar 2.6.0 + mime-db 1.54.0 + parse-torrent 11.0.24 + fuse.js 7.5.0 + vue-sonner 2.0.9 + vite-plugin-pwa 1.3.0 + workbox-window 7.4.1
 >
 > **关键约定**：
 >
 > - UI 组件使用 shadcn-vue（reka-ui 基础），通过 `pnpm dlx shadcn-vue@latest add [component]` 安装
 > - 图标使用 `@hugeicons/core-free-icons` (4.2.3) + `@hugeicons/vue` (1.0.7)，通过 `src/components/icon.vue` 封装
 > - API 请求通过 `src/api/request.ts` 的 `createApi` 封装，接口在 `src/api/index.ts` 中定义
-> - 路由定义在 `src/main.ts`，菜单配置在 `src/router/config.ts` 的 `pageMeta` 和 `dirMeta` 中
+> - 路由与菜单配置集中在 `src/router/config.ts`：`toolPages` 单一数据源派生 `pageMeta` + `routeConfig`，`src/main.ts` 组装路由
 > - `src/pages/**/components/` 目录下的文件不会生成路由菜单
 > - 多环境构建：dev 走 vite proxy，CF 走相对路径 `/api`，GH 走 worker 完整 URL
 > - ESLint 配置在 `eslint.config.mjs`（@antfu/eslint-config），格式化用 Prettier

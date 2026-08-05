@@ -35,6 +35,8 @@
 | 提示框   | vue-sonner                       |
 | 日期     | dayjs + lunisolar                |
 | 模糊搜索 | fuse.js                          |
+| Media    | mime-db                          |
+| Torrent  | parse-torrent                    |
 | PDF 合并 | pdf-lib                          |
 | 拖拽排序 | 原生 HTML5 Drag and Drop         |
 | PWA      | vite-plugin-pwa + workbox-window |
