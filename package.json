@@ -38,12 +38,12 @@
     "pdf-lib": "1.17.1",
     "reka-ui": "2.10.1",
     "tailwind-merge": "3.6.0",
-    "vue": "3.5.40",
+    "vue": "3.5.41",
     "vue-router": "5.2.0",
     "vue-sonner": "2.0.9"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "9.2.0",
+    "@antfu/eslint-config": "9.3.0",
     "@tailwindcss/vite": "4.3.3",
     "@types/node": "26.1.2",
     "@types/parse-torrent": "5.8.8",
