@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type parseTorrent from 'parse-torrent';
+import type { Instance as TorrentInstance } from 'parse-torrent';
 import dayjs from 'dayjs';
 import { remote as parseTorrentRemote, toMagnetURI } from 'parse-torrent';
 import { ref } from 'vue';
@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button';
 
 const MAX_FILES = 100;
 
-async function parseTorrentFile(file: File): Promise<parseTorrent.Instance> {
+async function parseTorrentFile(file: File): Promise<TorrentInstance> {
   return new Promise((resolve, reject) => {
     parseTorrentRemote(file, (err, torrent) => {
       if (err !== undefined && err !== null) {
@@ -47,7 +47,7 @@ const handleFileSelect = async (e: Event) => {
   for (const file of Array.from(files)) {
     try {
       const torrent = await parseTorrentFile(file);
-      const magnet = toMagnetURI(torrent);
+      const magnet = toMagnetURI(torrent as never);
       results.push({ fileName: file.name, magnet });
     } catch {
       results.push({ fileName: file.name, magnet: `[解析失败] ${file.name}` });
