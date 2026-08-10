@@ -90,7 +90,7 @@ hanekawa-tools-vue/
 │   │   └── transform/    # 转换类工具（种子转磁力链、发票合并、取色器）
 │   └── router/           # 路由配置
 ├── vite-plugins/         # 自定义 Vite 插件
-│   ├── fontSwitch.ts     # 字体切换（dev 本地 / prod CDN）
+│   ├── fontSwitch.ts     # 字体插件（dev 本地包 / prod 打包本地 + 按需缓存）
 │   └── htmlBuildTime.ts  # 构建时间注入
 ├── vite.config.ts
 └── package.json
@@ -140,7 +140,7 @@ export const newApi = createApi<ResponseType>({
 ## 🎨 设计规范
 
 - **颜色主题**：基于 shadcn/ui 的 olive 配色方案
-- **字体**：LXGW WenKai（开发环境本地包，生产环境 CDN）
+- **字体**：LXGW WenKai（构建时打包进 `dist/fonts/`，unicode-range 按需加载 + SW 运行时缓存）
 - **深色模式**：通过 CSS 变量自动切换
 - **动画**：使用 `tw-animate-css` 提供的过渡效果
 
@@ -149,7 +149,7 @@ export const newApi = createApi<ResponseType>({
 - **路由懒加载**：所有页面组件通过动态 `import()` 按需加载
 - **代码分割**：Vite `rolldownOptions.groups` 将第三方库拆分为独立 chunk（vue、reka-ui、pdf-lib、icons 等）
 - **Brotli 压缩**：构建产物使用 Brotli 级别 11 压缩（GH 模式）
-- **PWA 离线缓存**：Workbox 预缓存静态资源 + API 响应 NetworkFirst 策略
+- **PWA 离线缓存**：Workbox 预缓存静态资源 + 字体子集 CacheFirst 运行时缓存（按需加载）+ API 响应 NetworkFirst 策略
 - **节假日数据缓存**：内存 Map 缓存，避免重复请求
 
 ## 📝 许可证

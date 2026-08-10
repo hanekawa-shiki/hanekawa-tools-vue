@@ -106,7 +106,7 @@ hanekawa-tools-vue/
 ├── components.json                # shadcn-vue 配置
 ├── vite.config.ts                 # Vite 配置（env/ + proxy + fontSwitch + PWA + Brotli + code splitting）
 └── vite-plugins/
-    ├── fontSwitch.ts              # 字体切换插件（dev 用本地包，prod 用 CDN）
+    ├── fontSwitch.ts              # 字体插件（dev 用本地包，prod 打包本地 + 按需缓存）
     └── htmlBuildTime.ts           # 构建时间注入到 HTML
 ```
 
@@ -149,7 +149,8 @@ src/data/holidays.ts（节假日业务逻辑：内存缓存 + 数据转换 + get
   - `onRegisteredSW`：保存 registration 到 `use-sw-update.ts`
 - 更新检查：路由 `afterEach` 时调用 `use-sw-update.ts` 的 `checkForUpdates`（60 秒节流，防频繁请求）
 - 离线缓存策略：
-  - 静态资源（JS/CSS/HTML/PNG/SVG/woff2/ico/jpeg/webp）：预缓存（5MB 上限）
+  - 静态资源（JS/CSS/HTML/PNG/SVG/ico/jpeg/webp）：预缓存（5MB 上限）
+  - 字体子集（`/fonts/*.woff2`）：`CacheFirst` 运行时缓存（`fonts-cache`，最多 600 条、30 天过期），不进预缓存（避免首装全量下载 29MB）
   - API 响应（`tools.hanekawa.top/api`）：`NetworkFirst`，最多 50 条、1 小时过期
 
 ### 代码分割策略
@@ -200,7 +201,7 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 | API 请求封装     | ✅ 完成 | `src/lib/request.ts`, `src/api/request.ts`, `src/api/index.ts`                                        |
 | 全局 Toast 通知  | ✅ 完成 | `vue-sonner`，按类型着色图标（success/info/warning/error）                                            |
 | 多环境构建配置   | ✅ 完成 | `env/.env`, `env/.env.cf`, `env/.env.gh`                                                              |
-| 字体切换插件     | ✅ 完成 | `vite-plugins/fontSwitch.ts`（dev 用本地 lxgw-wenkai-webfont 包，prod 用 CDN）                        |
+| 字体插件         | ✅ 完成 | `vite-plugins/fontSwitch.ts`（dev 用本地包，prod 打包进 dist/fonts/ + SW 按需运行时缓存）             |
 | PWA 可安装       | ✅ 完成 | `vite-plugin-pwa`（autoUpdate 模式 + Workbox 离线缓存）                                               |
 | PWA 更新提示     | ✅ 完成 | `src/main.ts` registerSW（toast + sessionStorage 标记 + 自动刷新），`use-sw-update.ts` 路由切换时检测 |
 | 代码分割         | ✅ 完成 | `vite.config.ts` rolldownOptions groups + 动态 import 路由懒加载                                      |
@@ -248,7 +249,7 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 > - 所有页面组件通过动态 `import()` 按路由懒加载，Vite rolldownOptions groups 拆分第三方库
 > - 主题使用项目自身的 ThemeProvider（provide/inject 模式）
 >
-> 项目当前功能包含：路由系统（含懒加载）、侧边栏导航、头像区域、主题切换、日历万年历（含节假日 API 接口）、油价查询（全国各地最新油价）、Media Types 查询（Fuse.js 模糊搜索）、种子转磁力链（含逐条删除 + 清除全部）、发票合并（HTML5 拖拽排序 + pdf-lib A4 PDF 合并导出）、取色器（HEX/RGB/HSL/HSV/CMYK）、月份选择器组件、字体切换插件（dev 本地包 / prod CDN）、PWA 可安装应用（autoUpdate 自动更新 + Workbox 离线缓存）、404 页面（Space Invaders 小游戏）、按类型着色的全局 Toast 通知。
+> 项目当前功能包含：路由系统（含懒加载）、侧边栏导航、头像区域、主题切换、日历万年历（含节假日 API 接口）、油价查询（全国各地最新油价）、Media Types 查询（Fuse.js 模糊搜索）、种子转磁力链（含逐条删除 + 清除全部）、发票合并（HTML5 拖拽排序 + pdf-lib A4 PDF 合并导出）、取色器（HEX/RGB/HSL/HSV/CMYK）、月份选择器组件、字体插件（dev 本地包 / prod 打包本地 + 按需运行时缓存）、PWA 可安装应用（autoUpdate 自动更新 + Workbox 离线缓存）、404 页面（Space Invaders 小游戏）、按类型着色的全局 Toast 通知。
 >
 > 请先阅读 `HANDOVER.md` 了解完整项目结构，然后告诉我你想做的下一步。
 
