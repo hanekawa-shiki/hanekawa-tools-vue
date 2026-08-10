@@ -27,7 +27,7 @@ interface ToolPageEntry {
 const toolPages: ToolPageEntry[] = [
   {
     path: 'home',
-    title: '首页',
+    title: '首页1',
     icon: 'HomeIcon',
     hidden: true,
     component: async () => import('@/pages/index.vue'),
