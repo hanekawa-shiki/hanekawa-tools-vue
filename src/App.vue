@@ -9,7 +9,7 @@ onMounted(() => {
   if (sessionStorage.getItem(PWA_UPDATED_KEY)) {
     sessionStorage.removeItem(PWA_UPDATED_KEY);
     toast.success('更新成功，当前已是最新版本', {
-      description: '页面已自动刷新，快去体验新功能吧',
+      description: '新版本已加载，快去体验新功能吧',
     });
   }
 });

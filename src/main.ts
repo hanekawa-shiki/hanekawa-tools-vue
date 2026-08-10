@@ -43,15 +43,31 @@ app.mount('#app');
 
 const { setRegistration, checkForUpdates } = useSWUpdate();
 
-registerSW({
+let updateToastId: string | number | null = null;
+
+const updateSW = registerSW({
   immediate: true,
+  onNeedRefresh() {
+    console.warn('[PWA] 发现新版本');
+    if (updateToastId != null) {
+      toast.dismiss(updateToastId);
+    }
+    updateToastId = toast.info('发现新版本', {
+      description: '点击「立即更新」刷新页面并加载新功能',
+      duration: Number.POSITIVE_INFINITY,
+      action: {
+        label: '立即更新',
+        onClick: () => {
+          updateToastId = null;
+          void updateSW(true);
+        },
+      },
+    });
+  },
   onNeedReload() {
-    console.warn('[PWA] 新版本已下载，即将自动刷新页面...');
+    console.warn('[PWA] 新版本已就绪，刷新页面...');
     sessionStorage.setItem(PWA_UPDATED_KEY, '1');
-    toast.info('发现新版本，正在自动更新...');
-    window.setTimeout(() => {
-      window.location.reload();
-    }, 800);
+    window.location.reload();
   },
   onOfflineReady() {
     console.warn('[PWA] 应用已可离线使用');

@@ -26,7 +26,7 @@ export default defineConfig(({ mode }) => {
       htmlBuildTime(),
       fontSwitch(mode),
       VitePWA({
-        registerType: 'autoUpdate',
+        registerType: 'prompt',
         manifest: {
           name: 'Hanekawa Tools',
           short_name: 'Hanekawa Tools',
@@ -53,13 +53,27 @@ export default defineConfig(({ mode }) => {
           ],
         },
         workbox: {
-          globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,jpeg,jpg,webp}'],
+          globPatterns: ['**/*.{js,css,html,ico,png,svg,jpeg,jpg,webp}'],
           clientsClaim: true,
           skipWaiting: true,
           navigateFallback: 'index.html',
           navigateFallbackDenylist: [/^\/api\//],
           maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
           runtimeCaching: [
+            {
+              urlPattern: /\/fonts\/.*\.woff2$/,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'fonts-cache',
+                cacheableResponse: {
+                  statuses: [0, 200],
+                },
+                expiration: {
+                  maxEntries: 600,
+                  maxAgeSeconds: 30 * 24 * 60 * 60,
+                },
+              },
+            },
             {
               urlPattern: /^https:\/\/tools\.hanekawa\.top\/api\//i,
               handler: 'NetworkFirst',
