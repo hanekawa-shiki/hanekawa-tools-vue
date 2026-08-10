@@ -34,7 +34,7 @@ const toolPages: ToolPageEntry[] = [
   },
   {
     path: 'query/calendar',
-    title: '日历1',
+    title: '日历10',
     description: '提供公历、农历日期查询。',
     icon: 'CalendarIcon',
     component: async () => import('@/pages/query/calendar.vue'),
