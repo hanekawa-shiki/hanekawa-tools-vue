@@ -10,7 +10,7 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import { toast } from 'vue-sonner';
 import App from './App.vue';
 import Icon from './components/icon.vue';
-import { PWA_UPDATED_KEY, useSWUpdate } from './composables/use-sw-update';
+import { PWA_UPDATED_KEY, pwaLog, pwaLogError, useSWUpdate } from './composables/use-sw-update';
 import { routeConfig } from './router/config';
 import 'dayjs/locale/zh-cn';
 import './index.css';
@@ -48,7 +48,7 @@ let updateToastId: string | number | null = null;
 const updateSW = registerSW({
   immediate: true,
   onNeedRefresh() {
-    console.warn('[PWA] 发现新版本');
+    pwaLog('发现新版本');
     if (updateToastId != null) {
       toast.dismiss(updateToastId);
     }
@@ -65,21 +65,21 @@ const updateSW = registerSW({
     });
   },
   onNeedReload() {
-    console.warn('[PWA] 新版本已就绪，刷新页面...');
+    pwaLog('新版本已就绪，刷新页面...');
     sessionStorage.setItem(PWA_UPDATED_KEY, '1');
     window.location.reload();
   },
   onOfflineReady() {
-    console.warn('[PWA] 应用已可离线使用');
+    pwaLog('应用已可离线使用');
   },
   onRegisteredSW(_swUrl, reg) {
     if (reg != null) {
-      console.warn('[PWA] 注册成功, scope:', reg.scope);
+      pwaLog('注册成功, scope:', reg.scope);
       setRegistration(reg);
     }
   },
   onRegistrationError(error) {
-    console.error('[PWA] 注册失败:', error);
+    pwaLogError('注册失败:', error);
   },
 });
 

@@ -2,6 +2,18 @@ import { ref } from 'vue';
 
 export const PWA_UPDATED_KEY = 'hanekawa-pwa-updated';
 
+function formatTime() {
+  return new Date().toLocaleTimeString('zh-CN', { hour12: false });
+}
+
+export function pwaLog(message: string, ...args: unknown[]) {
+  console.warn(`[PWA][${formatTime()}] ${message}`, ...args);
+}
+
+export function pwaLogError(message: string, ...args: unknown[]) {
+  console.error(`[PWA][${formatTime()}] ${message}`, ...args);
+}
+
 const registration = ref<ServiceWorkerRegistration | null>(null);
 let lastCheck = 0;
 
@@ -18,7 +30,7 @@ export function useSWUpdate() {
     try {
       await registration.value.update();
     } catch (e) {
-      console.error('[PWA] 更新检查失败:', e);
+      pwaLogError('更新检查失败:', e);
     }
   }
 
