@@ -27,14 +27,14 @@ interface ToolPageEntry {
 const toolPages: ToolPageEntry[] = [
   {
     path: 'home',
-    title: '首页1',
+    title: '首页',
     icon: 'HomeIcon',
     hidden: true,
     component: async () => import('@/pages/index.vue'),
   },
   {
     path: 'query/calendar',
-    title: '日历',
+    title: '日历1',
     description: '提供公历、农历日期查询。',
     icon: 'CalendarIcon',
     component: async () => import('@/pages/query/calendar.vue'),
