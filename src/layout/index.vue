@@ -38,9 +38,9 @@ const routeMenuItems = computed(() => getRouteMenuItems());
             <span class="text-sm font-semibold">Hanekawa Tools</span>
             <span
               class="mt-0.5 text-xs text-muted-foreground"
-              title="何でもは知らないわよ。知ってることだけ"
+              title="我不是无所不知，只是刚好知道而已。"
             >
-              我不是无所不知，只是刚好知道而已。
+              何でもは知らないわよ。知ってることだけ
             </span>
           </div>
         </div>
