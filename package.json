@@ -7,17 +7,12 @@
   "homepage": "https://github.com/hanekawa-shiki/hanekawa-tools-vue",
   "engines": {
     "node": ">=22",
-    "pnpm": "11.21.0"
+    "pnpm": ">=11 <12"
   },
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": "^22.x",
-      "onFail": "download"
-    },
-    "packageManager": {
-      "name": "pnpm",
-      "version": "11.21.0",
+      "version": ">=22",
       "onFail": "download"
     }
   },
