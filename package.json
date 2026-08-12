@@ -6,13 +6,13 @@
   "packageManager": "pnpm@11.21.0",
   "homepage": "https://github.com/hanekawa-shiki/hanekawa-tools-vue",
   "engines": {
-    "node": ">=22",
+    "node": "26.7.0",
     "pnpm": ">=11 <12"
   },
   "devEngines": {
     "runtime": {
       "name": "node",
-      "version": ">=22",
+      "version": "26.7.0",
       "onFail": "download"
     }
   },
