@@ -3,11 +3,23 @@
   "type": "module",
   "version": "2.0.0",
   "private": true,
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@11.21.0",
   "homepage": "https://github.com/hanekawa-shiki/hanekawa-tools-vue",
   "engines": {
-    "node": ">=24",
-    "pnpm": "10.34.5"
+    "node": ">=22",
+    "pnpm": "11.21.0"
+  },
+  "devEngines": {
+    "runtime": {
+      "name": "node",
+      "version": "^22.x",
+      "onFail": "download"
+    },
+    "packageManager": {
+      "name": "pnpm",
+      "version": ">=11.0.0 <12.0.0",
+      "onFail": "download"
+    }
   },
   "scripts": {
     "start": "vite",

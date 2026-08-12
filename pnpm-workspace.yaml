@@ -1,3 +1,6 @@
+nodeDownloadMirrors:
+  release: https://npmmirror.com/mirrors/node/
+
 
 shellEmulator: true
 trustPolicy: no-downgrade
