@@ -296,7 +296,7 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       node:
-        specifier: runtime:>=22
+        specifier: runtime:26.7.0
         version: runtime:26.7.0
       prettier:
         specifier: 3.9.6
