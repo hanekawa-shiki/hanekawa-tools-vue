@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { OilPriceCityData } from '@/api';
 import {
   Table,
   TableBody,

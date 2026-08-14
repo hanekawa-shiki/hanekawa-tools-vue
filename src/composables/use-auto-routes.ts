@@ -1,3 +1,4 @@
+import type { PageMetaConfig } from '@/router/config';
 import { dirMeta, pageMeta } from '@/router/config';
 
 export interface NavMainItem {

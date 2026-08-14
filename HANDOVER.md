@@ -1,6 +1,6 @@
 # 项目交接文档
 
-> 最后更新：2026-08-05
+> 最后更新：2026-08-14
 > 仓库地址：git@github.com:hanekawa-shiki/hanekawa-tools-vue.git
 
 ---
@@ -9,11 +9,11 @@
 
 | 分类         | 技术                                   | 版本          |
 | ------------ | -------------------------------------- | ------------- |
-| 框架         | Vue                                    | 3.5.40        |
-| 构建         | Vite                                   | 8.2.0         |
+| 框架         | Vue                                    | 3.5.41        |
+| 构建         | Vite                                   | 8.2.1         |
 | 语言         | TypeScript                             | ~6.0.3        |
 | 样式         | Tailwind CSS                           | 4.3.3         |
-| UI 组件      | shadcn-vue (reka-ui)                   | 2.10.1        |
+| UI 组件      | shadcn-vue (reka-ui)                   | 2.10.3        |
 | 图标         | Hugeicons (@hugeicons/vue)             | 4.2.3 / 1.0.7 |
 | 路由         | vue-router                             | 5.2.0         |
 | HTTP         | axios                                  | 1.19.0        |
@@ -28,9 +28,9 @@
 | 组合式工具   | @vueuse/core                           | 14.4.0        |
 | 本地字体     | lxgw-wenkai-webfont                    | 1.7.0         |
 | PWA          | vite-plugin-pwa + workbox-window       | 1.3.0 / 7.4.1 |
-| 包管理       | pnpm                                   | 10.34.5       |
-| Node         | Node.js                                | >=24          |
-| Lint         | @antfu/eslint-config                   | 9.2.0         |
+| 包管理       | pnpm                                   | 11.21.0       |
+| Node         | Node.js                                | 26.7.0        |
+| Lint         | @antfu/eslint-config                   | 9.3.0         |
 | Formatter    | Prettier + prettier-plugin-tailwindcss | 3.9.6         |
 
 ---
@@ -45,9 +45,9 @@ hanekawa-tools-vue/
 │   └── .env.gh                    # GitHub Pages 部署（VITE_API_BASE_URL=完整 worker URL）
 ├── src/
 │   ├── api/                       # API 接口层
-│   │   ├── request.ts             # createApi 泛型封装（method/url → 返回函数）
-│   │   └── index.ts               # 接口列表（fetchHolidayApi、fetchOilPriceApi）
-│   ├── assest/                    # 静态资源
+│   │   ├── request.ts             # createApi 泛型封装（method/url → 返回函数）+ ApiRequest 类型
+│   │   └── index.ts               # 接口列表 + API 响应类型（fetchHolidayApi、fetchOilPriceApi）
+│   ├── assets/                    # 静态资源
 │   │   └── avatar.jpeg            # 侧边栏头像图片
 │   ├── components/
 │   │   ├── icon.vue               # 图标封装组件（@hugeicons/vue + @hugeicons/core-free-icons，34 个图标）
@@ -72,10 +72,11 @@ hanekawa-tools-vue/
 │   │       ├── table/             # Table 表格组件（9 个子组件，含 TableEmpty 空状态）
 │   │       └── tooltip/           # Tooltip 提示
 │   ├── composables/               # Vue 组合式函数
-│   │   ├── use-auto-routes.ts     # 自动生成导航菜单项
+│   │   ├── pwa.ts                 # PWA 注册（setupPWA：registerSW + chunk 加载失败检测 + 更新检查触发）
+│   │   ├── use-auto-routes.ts     # 自动生成导航菜单项（含 NavMainItem 类型）
 │   │   └── use-sw-update.ts       # PWA 更新检查（路由切换时触发，60s 节流）
 │   ├── data/
-│   │   └── holidays.ts            # 法定节假日（从 worker API 获取 + 内存缓存）
+│   │   └── holidays.ts            # 法定节假日（从 worker API 获取 + 内存缓存，含 Holiday 类型）
 │   ├── layout/
 │   │   └── index.vue              # 主布局：SidebarProvider + Sidebar + SidebarInset + RouterView
 │   ├── lib/
@@ -101,8 +102,8 @@ hanekawa-tools-vue/
 │   │       ├── invoice-merge.vue    # 发票合并工具（HTML5 拖拽排序 + pdf-lib 导出 A4 PDF）
 │   │       └── color-picker.vue     # 取色器（HEX/RGB/HSL/HSV/CMYK）
 │   ├── router/
-│   │   └── config.ts              # 路由配置（pageMeta/dirMeta/路由定义）
-│   └── env.d.ts                   # 全局类型声明
+│   │   └── config.ts              # 路由配置（pageMeta/dirMeta/PageMetaConfig 类型/路由定义）
+│   └── env.d.ts                   # 全局类型声明（vite/client + 第三方 module 声明）
 ├── components.json                # shadcn-vue 配置
 ├── vite.config.ts                 # Vite 配置（env/ + proxy + fontSwitch + PWA + Brotli + code splitting）
 └── vite-plugins/
@@ -143,10 +144,12 @@ src/data/holidays.ts（节假日业务逻辑：内存缓存 + 数据转换 + get
 
 ### PWA 架构
 
-- 使用 `vite-plugin-pwa` + `workbox-window`，`registerType: 'autoUpdate'`（自动更新）
-- SW 注册在 `src/main.ts` 中通过 `registerSW`（immediate）完成：
-  - `onNeedReload`：toast 提示"发现新版本，正在自动更新..." → 写入 `sessionStorage` 标记（`PWA_UPDATED_KEY`）→ 800ms 后自动刷新页面
+- 使用 `vite-plugin-pwa` + `workbox-window`，`registerType: 'prompt'`（手动提示 + autoUpdate 组合，见 `src/composables/pwa.ts`）
+- SW 注册在 `src/composables/pwa.ts` 的 `setupPWA(router)` 中通过 `registerSW`（immediate）完成：
+  - `onNeedRefresh`：toast 提示"发现新版本"→ 点击「立即更新」调用 `updateSW(true)`
+  - `onNeedReload`：写入 `sessionStorage` 标记（`PWA_UPDATED_KEY`）→ 刷新页面，`App.vue` onMounted 检测到标记后 toast 提示更新成功
   - `onRegisteredSW`：保存 registration 到 `use-sw-update.ts`
+  - 同时监听 `router.onError` / `window error` / `unhandledrejection` 检测 chunk 加载失败（部署更新后老版本 chunk 404），toast 提示重新加载
 - 更新检查：路由 `afterEach` 时调用 `use-sw-update.ts` 的 `checkForUpdates`（60 秒节流，防频繁请求）
 - 离线缓存策略：
   - 静态资源（JS/CSS/HTML/PNG/SVG/ico/jpeg/webp）：预缓存（5MB 上限）
@@ -157,16 +160,14 @@ src/data/holidays.ts（节假日业务逻辑：内存缓存 + 数据转换 + get
 
 Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆分为独立 chunk：
 
-| Chunk 名          | 包含的库                                     |
-| ----------------- | -------------------------------------------- |
-| `vendor-vue`      | vue, vue-router, @vueuse/core                |
-| `vendor-reka`     | reka-ui                                      |
-| `vendor-pdf`      | pdf-lib                                      |
-| `vendor-sortable` | sortablejs, vuedraggable（预留，当前未使用） |
-| `vendor-date`     | dayjs, lunisolar                             |
-| `vendor-icons`    | @hugeicons/core-free-icons, @hugeicons/vue   |
-| `vendor-torrent`  | parse-torrent                                |
-| `vendor-tanstack` | @tanstack/*（预留，依赖已移除）              |
+| Chunk 名         | 包含的库                                   |
+| ---------------- | ------------------------------------------ |
+| `vendor-vue`     | vue, vue-router, @vueuse/core              |
+| `vendor-reka`    | reka-ui                                    |
+| `vendor-pdf`     | pdf-lib                                    |
+| `vendor-date`    | dayjs, lunisolar                           |
+| `vendor-icons`   | @hugeicons/core-free-icons, @hugeicons/vue |
+| `vendor-torrent` | parse-torrent                              |
 
 所有页面组件通过动态 `import()` 按路由懒加载。
 
@@ -174,8 +175,13 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 
 - 统一使用 `@hugeicons/core-free-icons` + `@hugeicons/vue`（`HugeiconsIcon` 组件）
 - 通过 `src/components/icon.vue` 封装，接收 `name` 字符串（如 `'CalendarIcon'`）渲染图标
-- 当前注册了 **34 个图标**，涵盖导航、操作、状态等类别
+- 当前注册了 **25 个图标**（按需注册，未用图标不在 iconMap 中），涵盖导航、操作、状态等类别
 - 图标大小由 CSS 类控制（如 `size-4`、`size-8`），不使用 `size` prop
+
+### 类型组织
+
+- 业务类型就近放在所属模块中并导出（`PageMetaConfig` → `src/router/config.ts`，API 响应类型 → `src/api/index.ts`，`Holiday` → `src/data/holidays.ts`，`CalendarCell` → `calendar-utils.ts`，`NavMainItem` → `use-auto-routes.ts`）
+- `src/env.d.ts` 仅保留全局声明：vite/client、`*.vue`、`virtual:pwa-register`、`mime-db` module 声明
 
 ---
 
@@ -183,30 +189,30 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 
 ### ✅ 已完成的功能
 
-| 功能             | 状态    | 关键文件                                                                                              |
-| ---------------- | ------- | ----------------------------------------------------------------------------------------------------- |
-| 路由系统         | ✅ 完成 | `src/main.ts`（createRouter + 组装 `routeConfig`）                                                    |
-| 侧边栏导航       | ✅ 完成 | `src/components/nav-main.vue`, `src/layout/index.vue`                                                 |
-| 头像区域         | ✅ 完成 | `src/layout/index.vue`（SidebarFooter 中的头像）                                                      |
-| 主题切换         | ✅ 完成 | `src/components/mode-toggle.vue`, `theme-provider.vue`                                                |
-| 日历万年历       | ✅ 完成 | `src/pages/query/calendar.vue` + 5个子组件（Calendar* 前缀）                                          |
-| 日历节假日接口   | ✅ 完成 | `src/data/holidays.ts`（从 worker API 获取 + 内存缓存）                                               |
-| 油价查询         | ✅ 完成 | `src/pages/query/oil-prices.vue`（全国油价，PC 双列/移动单列）                                        |
-| 油价表格组件     | ✅ 完成 | `src/pages/query/components/OilPriceTable.vue`（从 oil-prices.vue 提取复用，TableEmpty 空状态）       |
-| Media Types 查询 | ✅ 完成 | `src/pages/query/media-types.vue`（Fuse.js 模糊搜索 + 手写虚拟滚动）                                  |
-| 种子转磁力链     | ✅ 完成 | `src/pages/transform/torrent2magnet.vue`（含逐条删除 + 清除全部）                                     |
-| 发票合并工具     | ✅ 完成 | `src/pages/transform/invoice-merge.vue`（HTML5 拖拽排序 + pdf-lib PDF 合并导出）                      |
-| 取色器           | ✅ 完成 | `src/pages/transform/color-picker.vue`（HEX/RGB/HSL/HSV/CMYK）                                        |
-| 404 页面         | ✅ 完成 | `src/pages/404.vue`（含 Space Invaders 小游戏 + 键盘/触摸操控）                                       |
-| API 请求封装     | ✅ 完成 | `src/lib/request.ts`, `src/api/request.ts`, `src/api/index.ts`                                        |
-| 全局 Toast 通知  | ✅ 完成 | `vue-sonner`，按类型着色图标（success/info/warning/error）                                            |
-| 多环境构建配置   | ✅ 完成 | `env/.env`, `env/.env.cf`, `env/.env.gh`                                                              |
-| 字体插件         | ✅ 完成 | `vite-plugins/fontSwitch.ts`（dev 用本地包，prod 打包进 dist/fonts/ + SW 按需运行时缓存）             |
-| PWA 可安装       | ✅ 完成 | `vite-plugin-pwa`（autoUpdate 模式 + Workbox 离线缓存）                                               |
-| PWA 更新提示     | ✅ 完成 | `src/main.ts` registerSW（toast + sessionStorage 标记 + 自动刷新），`use-sw-update.ts` 路由切换时检测 |
-| 代码分割         | ✅ 完成 | `vite.config.ts` rolldownOptions groups + 动态 import 路由懒加载                                      |
-| Brotli 压缩      | ✅ 完成 | `vite-plugin-compression`（GH 模式，level 11）                                                        |
-| 月份选择器       | ✅ 完成 | `src/components/month-picker.vue`（4×3 网格 + 年份导航 + min/max 支持）                               |
+| 功能             | 状态    | 关键文件                                                                                                       |
+| ---------------- | ------- | -------------------------------------------------------------------------------------------------------------- |
+| 路由系统         | ✅ 完成 | `src/main.ts`（createRouter + 组装 `routeConfig`）                                                             |
+| 侧边栏导航       | ✅ 完成 | `src/components/nav-main.vue`, `src/layout/index.vue`                                                          |
+| 头像区域         | ✅ 完成 | `src/layout/index.vue`（SidebarFooter 中的头像）                                                               |
+| 主题切换         | ✅ 完成 | `src/components/mode-toggle.vue`, `theme-provider.vue`                                                         |
+| 日历万年历       | ✅ 完成 | `src/pages/query/calendar.vue` + 5个子组件（Calendar* 前缀）                                                   |
+| 日历节假日接口   | ✅ 完成 | `src/data/holidays.ts`（从 worker API 获取 + 内存缓存）                                                        |
+| 油价查询         | ✅ 完成 | `src/pages/query/oil-prices.vue`（全国油价，PC 双列/移动单列）                                                 |
+| 油价表格组件     | ✅ 完成 | `src/pages/query/components/OilPriceTable.vue`（从 oil-prices.vue 提取复用，TableEmpty 空状态）                |
+| Media Types 查询 | ✅ 完成 | `src/pages/query/media-types.vue`（Fuse.js 模糊搜索 + 手写虚拟滚动）                                           |
+| 种子转磁力链     | ✅ 完成 | `src/pages/transform/torrent2magnet.vue`（含逐条删除 + 清除全部）                                              |
+| 发票合并工具     | ✅ 完成 | `src/pages/transform/invoice-merge.vue`（HTML5 拖拽排序 + pdf-lib PDF 合并导出）                               |
+| 取色器           | ✅ 完成 | `src/pages/transform/color-picker.vue`（HEX/RGB/HSL/HSV/CMYK）                                                 |
+| 404 页面         | ✅ 完成 | `src/pages/404.vue`（含 Space Invaders 小游戏 + 键盘/触摸操控）                                                |
+| API 请求封装     | ✅ 完成 | `src/lib/request.ts`, `src/api/request.ts`, `src/api/index.ts`                                                 |
+| 全局 Toast 通知  | ✅ 完成 | `vue-sonner`，按类型着色图标（success/info/warning/error）                                                     |
+| 多环境构建配置   | ✅ 完成 | `env/.env`, `env/.env.cf`, `env/.env.gh`                                                                       |
+| 字体插件         | ✅ 完成 | `vite-plugins/fontSwitch.ts`（dev 用本地包，prod 打包进 dist/fonts/ + SW 按需运行时缓存）                      |
+| PWA 可安装       | ✅ 完成 | `vite-plugin-pwa`（prompt 模式 + Workbox 离线缓存）                                                            |
+| PWA 更新提示     | ✅ 完成 | `src/composables/pwa.ts` setupPWA（toast + sessionStorage 标记 + 自动刷新），`use-sw-update.ts` 路由切换时检测 |
+| 代码分割         | ✅ 完成 | `vite.config.ts` rolldownOptions groups + 动态 import 路由懒加载                                               |
+| Brotli 压缩      | ✅ 完成 | `vite-plugin-compression`（GH 模式，level 11）                                                                 |
+| 月份选择器       | ✅ 完成 | `src/components/month-picker.vue`（4×3 网格 + 年份导航 + min/max 支持）                                        |
 
 ### 🔧 已优化的问题
 
@@ -217,6 +223,10 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 | 项目地址集中管理 | `package.json` 的 `homepage` 字段统一管理项目地址，`layout/index.vue` 动态导入              |
 | 路由配置重构     | `toolPages` 单一数据源统一派生 `pageMeta` + `routeConfig`，新增页面只需一处配置             |
 | 移除未用依赖     | 移除 `@tanstack/vue-table`、`@lucide/vue`、`@internationalized/date` 及 `ui/table/utils.ts` |
+| 目录重命名       | `src/assest/`（拼写错误）→ `src/assets/`                                                    |
+| 类型就近组织     | 业务类型从 `env.d.ts` 全局声明移至所属模块导出（api/request、router/config、holidays 等）   |
+| 清理死代码       | 移除 icon.vue 中 8 个未使用图标、vite.config.ts 中 vendor-sortable / vendor-tanstack 分组   |
+| 主题强化         | ThemeProvider 立即应用主题类（避免闪烁）+ 跟随系统主题变化时自动切换（matchMedia 监听）     |
 
 ### 🟡 待完善 / 已知问题
 
@@ -234,22 +244,23 @@ Vite `rolldownOptions.output.codeSplitting.groups` 按功能将第三方库拆�
 
 > 我正在维护一个名为 `hanekawa-tools-vue` 的 Vue 3 工具集网站（GitHub 仓库：`hanekawa-shiki/hanekawa-tools-vue`）。
 >
-> **技术栈**：Vue 3.5.40 + Vite 8.2.0 + TypeScript ~6.0.3 + Tailwind CSS 4.3.3 + shadcn-vue (reka-ui 2.10.1) + Hugeicons (4.2.3) + vue-router 5.2.0 + axios 1.19.0 + dayjs 1.11.21 + lunisolar 2.6.0 + mime-db 1.54.0 + parse-torrent 11.0.24 + fuse.js 7.5.0 + vue-sonner 2.0.9 + vite-plugin-pwa 1.3.0 + workbox-window 7.4.1
+> **技术栈**：Vue 3.5.41 + Vite 8.2.1 + TypeScript ~6.0.3 + Tailwind CSS 4.3.3 + shadcn-vue (reka-ui 2.10.3) + Hugeicons (4.2.3) + vue-router 5.2.0 + axios 1.19.0 + dayjs 1.11.21 + lunisolar 2.6.0 + mime-db 1.54.0 + parse-torrent 11.0.24 + fuse.js 7.5.0 + vue-sonner 2.0.9 + vite-plugin-pwa 1.3.0 + workbox-window 7.4.1
 >
 > **关键约定**：
 >
 > - UI 组件使用 shadcn-vue（reka-ui 基础），通过 `pnpm dlx shadcn-vue@latest add [component]` 安装
-> - 图标使用 `@hugeicons/core-free-icons` (4.2.3) + `@hugeicons/vue` (1.0.7)，通过 `src/components/icon.vue` 封装
-> - API 请求通过 `src/api/request.ts` 的 `createApi` 封装，接口在 `src/api/index.ts` 中定义
+> - 图标使用 `@hugeicons/core-free-icons` (4.2.3) + `@hugeicons/vue` (1.0.7)，统一通过 `src/components/icon.vue` 封装（按需注册 iconMap）
+> - API 请求通过 `src/api/request.ts` 的 `createApi` 封装，接口与响应类型在 `src/api/index.ts` 中定义
+> - 业务类型就近组织：`PageMetaConfig` → `router/config.ts`，`Holiday` → `data/holidays.ts`，`CalendarCell` → `calendar-utils.ts`，`NavMainItem` → `use-auto-routes.ts`
 > - 路由与菜单配置集中在 `src/router/config.ts`：`toolPages` 单一数据源派生 `pageMeta` + `routeConfig`，`src/main.ts` 组装路由
 > - `src/pages/**/components/` 目录下的文件不会生成路由菜单
 > - 多环境构建：dev 走 vite proxy，CF 走相对路径 `/api`，GH 走 worker 完整 URL
 > - ESLint 配置在 `eslint.config.mjs`（@antfu/eslint-config），格式化用 Prettier
-> - PWA 使用 autoUpdate 模式，`src/main.ts` 中 registerSW，发现新版本时 toast 提示并自动刷新（800ms），路由切换时通过 `use-sw-update.ts` 检查更新（60s 节流）
+> - PWA：`src/composables/pwa.ts` 的 `setupPWA` 注册 SW（prompt 模式），发现新版本 toast 提示 + 手动/自动刷新，路由切换时通过 `use-sw-update.ts` 检查更新（60s 节流），chunk 加载失败（部署更新）时 toast 提示重新加载
 > - 所有页面组件通过动态 `import()` 按路由懒加载，Vite rolldownOptions groups 拆分第三方库
-> - 主题使用项目自身的 ThemeProvider（provide/inject 模式）
+> - 主题使用项目自身的 ThemeProvider（provide/inject 模式，支持跟随系统主题实时切换）
 >
-> 项目当前功能包含：路由系统（含懒加载）、侧边栏导航、头像区域、主题切换、日历万年历（含节假日 API 接口）、油价查询（全国各地最新油价）、Media Types 查询（Fuse.js 模糊搜索）、种子转磁力链（含逐条删除 + 清除全部）、发票合并（HTML5 拖拽排序 + pdf-lib A4 PDF 合并导出）、取色器（HEX/RGB/HSL/HSV/CMYK）、月份选择器组件、字体插件（dev 本地包 / prod 打包本地 + 按需运行时缓存）、PWA 可安装应用（autoUpdate 自动更新 + Workbox 离线缓存）、404 页面（Space Invaders 小游戏）、按类型着色的全局 Toast 通知。
+> 项目当前功能包含：路由系统（含懒加载）、侧边栏导航、头像区域、主题切换、日历万年历（含节假日 API 接口）、油价查询（全国各地最新油价）、Media Types 查询（Fuse.js 模糊搜索）、种子转磁力链（含逐条删除 + 清除全部）、发票合并（HTML5 拖拽排序 + pdf-lib A4 PDF 合并导出）、取色器（HEX/RGB/HSL/HSV/CMYK）、月份选择器组件、字体插件（dev 本地包 / prod 打包本地 + 按需运行时缓存）、PWA 可安装应用（prompt 更新提示 + Workbox 离线缓存）、404 页面（Space Invaders 小游戏）、按类型着色的全局 Toast 通知。
 >
 > 请先阅读 `HANDOVER.md` 了解完整项目结构，然后告诉我你想做的下一步。
 

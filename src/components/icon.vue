@@ -1,17 +1,13 @@
 <script setup lang="ts">
 import type { Component } from 'vue';
 import {
-  ArrowLeftIcon,
   ArrowLeftRightIcon,
   BinocularsIcon,
   CalendarIcon,
   Cancel01Icon,
   CheckIcon,
-  ChevronDownIcon,
   ChevronLeftIcon,
   ChevronRightIcon,
-  ChevronUpIcon,
-  CircleIcon,
   ColorPickerIcon,
   Copy01Icon,
   Delete01Icon,
@@ -25,16 +21,11 @@ import {
   Layers01Icon,
   Link01Icon,
   MagnetIcon,
-  Menu01Icon,
-  Menu04Icon,
   Moon02Icon,
   RepeatIcon,
   Search01Icon,
-  Settings02Icon,
   Sun01Icon,
-  SunCloud02Icon,
   Upload01Icon,
-  WrenchIcon,
 } from '@hugeicons/core-free-icons';
 import { HugeiconsIcon } from '@hugeicons/vue';
 import { computed } from 'vue';
@@ -60,22 +51,11 @@ const iconMap: Record<string, Component> = {
   FileTypeIcon,
   ColorPickerIcon,
   ArrowLeftRightIcon,
-  ArrowLeftIcon,
-  WrenchIcon,
   Sun01Icon,
   Moon02Icon,
-  Menu01Icon,
-  Menu04Icon,
-  Settings02Icon,
   CheckIcon,
   Cancel01Icon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
-  CircleIcon,
   Search01Icon,
-  SunCloud02Icon,
   RepeatIcon,
   GithubIcon,
   Upload01Icon,
@@ -85,6 +65,8 @@ const iconMap: Record<string, Component> = {
   File01Icon,
   Copy01Icon,
   FileInputIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
 };
 
 const iconData = computed(() => iconMap[props.name]);

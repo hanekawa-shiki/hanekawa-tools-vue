@@ -1,6 +1,6 @@
 <script lang="ts">
 import type { InjectionKey, Ref } from 'vue';
-import { inject, onMounted, provide, ref, watch } from 'vue';
+import { inject, onUnmounted, provide, ref, watch } from 'vue';
 
 type Theme = 'dark' | 'light' | 'system';
 
@@ -32,6 +32,8 @@ const props = withDefaults(
   }
 );
 
+const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+
 const theme = ref<Theme>((localStorage.getItem(props.storageKey) as Theme) || props.defaultTheme);
 
 const setTheme = (t: Theme) => {
@@ -41,21 +43,25 @@ const setTheme = (t: Theme) => {
 
 provide(ThemeProviderKey, { theme, setTheme });
 
-onMounted(() => {
-  watch(
-    theme,
-    (t) => {
-      const root = document.documentElement;
-      root.classList.remove('light', 'dark');
-      if (t === 'system') {
-        const sys = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-        root.classList.add(sys);
-      } else {
-        root.classList.add(t);
-      }
-    },
-    { immediate: true }
+function applyTheme() {
+  const root = document.documentElement;
+  root.classList.remove('light', 'dark');
+  root.classList.add(
+    theme.value === 'system' ? (mediaQuery.matches ? 'dark' : 'light') : theme.value
   );
+}
+
+const onSystemThemeChange = () => {
+  if (theme.value === 'system') {
+    applyTheme();
+  }
+};
+
+applyTheme();
+watch(theme, applyTheme);
+mediaQuery.addEventListener('change', onSystemThemeChange);
+onUnmounted(() => {
+  mediaQuery.removeEventListener('change', onSystemThemeChange);
 });
 </script>
 

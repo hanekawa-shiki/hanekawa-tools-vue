@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
-import avatarImg from '@/assest/avatar.jpeg';
+import avatarImg from '@/assets/avatar.jpeg';
 import ModeToggle from '@/components/mode-toggle.vue';
 import NavMain from '@/components/nav-main.vue';
 import { Button } from '@/components/ui/button';

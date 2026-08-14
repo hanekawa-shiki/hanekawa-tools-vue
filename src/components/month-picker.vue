@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { ChevronLeftIcon, ChevronRightIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/vue';
 import { computed, ref } from 'vue';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -118,14 +116,14 @@ function selectMonth(m: Month) {
           class="absolute left-1 inline-flex size-7 items-center justify-center p-0"
           @click="yearBackward"
         >
-          <HugeiconsIcon :icon="ChevronLeftIcon" class="size-4 opacity-50" />
+          <Icon name="ChevronLeftIcon" class="size-4 opacity-50" />
         </Button>
         <Button
           variant="outline"
           class="absolute right-1 inline-flex size-7 items-center justify-center p-0"
           @click="yearForward"
         >
-          <HugeiconsIcon :icon="ChevronRightIcon" class="size-4 opacity-50" />
+          <Icon name="ChevronRightIcon" class="size-4 opacity-50" />
         </Button>
       </div>
     </div>

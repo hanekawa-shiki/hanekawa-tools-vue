@@ -9,6 +9,11 @@ import { Button } from '@/components/ui/button';
 
 const MAX_FILES = 100;
 
+interface TorrentInfo {
+  fileName: string;
+  magnet: string;
+}
+
 async function parseTorrentFile(file: File): Promise<TorrentInstance> {
   return new Promise((resolve, reject) => {
     parseTorrentRemote(file, (err, torrent) => {

@@ -1,5 +1,13 @@
 import type { RouteRecordRaw } from 'vue-router';
 
+export interface PageMetaConfig {
+  title?: string;
+  icon?: string;
+  description?: string;
+  isActive?: boolean;
+  hidden?: boolean;
+}
+
 export const dirMeta: Record<string, PageMetaConfig> = {
   transform: {
     title: '转换',

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import type { CalendarCell } from './calendar-utils';
+
 defineProps<{
   cell: CalendarCell;
   year: number;

@@ -4,6 +4,19 @@ import { getHolidayInfo } from '@/data/holidays';
 
 const WEEK_START_KEY = 'calendar_week_start';
 
+export interface CalendarCell {
+  day: number;
+  lunar: string;
+  solarTerm: string;
+  holidayName: string;
+  showHolidayName: boolean;
+  isHoliday: boolean;
+  isWeekend: boolean;
+  isWorkday: boolean;
+  isToday: boolean;
+  isSelected: boolean;
+}
+
 export function getWeekStart(): 0 | 6 {
   try {
     const val = localStorage.getItem(WEEK_START_KEY);

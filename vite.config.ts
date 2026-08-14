@@ -139,10 +139,6 @@ export default defineConfig(({ mode }) => {
                 test: /node_modules[\\/]pdf-lib[\\/]/,
               },
               {
-                name: 'vendor-sortable',
-                test: /node_modules[\\/](?:sortablejs|vuedraggable)[\\/]/,
-              },
-              {
                 name: 'vendor-date',
                 test: /node_modules[\\/](?:dayjs|lunisolar)[\\/]/,
               },
@@ -153,10 +149,6 @@ export default defineConfig(({ mode }) => {
               {
                 name: 'vendor-torrent',
                 test: /node_modules[\\/]parse-torrent[\\/]/,
-              },
-              {
-                name: 'vendor-tanstack',
-                test: /node_modules[\\/]@tanstack[\\/]/,
               },
             ],
           },

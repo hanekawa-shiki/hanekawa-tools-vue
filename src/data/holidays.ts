@@ -1,4 +1,11 @@
+import type { HolidayData } from '@/api';
 import { fetchHolidayApi } from '@/api';
+
+export interface Holiday {
+  name: string;
+  date: string;
+  isWorkday?: boolean;
+}
 
 const cache = new Map<number, Holiday[]>();
 

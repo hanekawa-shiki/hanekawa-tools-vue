@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import type { NavMainItem } from '@/composables/use-auto-routes';
-import { ChevronRightIcon } from '@hugeicons/core-free-icons';
-import { HugeiconsIcon } from '@hugeicons/vue';
 import { ref } from 'vue';
 import { useRoute } from 'vue-router';
 import Collapsible from '@/components/ui/collapsible/Collapsible.vue';
@@ -47,8 +45,8 @@ const closeMobileSidebar = () => {
               >
                 <Icon v-if="item.icon" :name="item.icon" class="size-4 shrink-0" />
                 <span class="flex-1 truncate">{{ item.title }}</span>
-                <HugeiconsIcon
-                  :icon="ChevronRightIcon"
+                <Icon
+                  name="ChevronRightIcon"
                   :class="
                     cn(
                       'size-4 shrink-0 transition-transform duration-200',

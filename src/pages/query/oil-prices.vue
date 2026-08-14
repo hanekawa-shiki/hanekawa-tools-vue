@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { OilPriceCityData } from '@/api';
 import { computed, ref } from 'vue';
 import { fetchOilPriceApi } from '@/api';
 import PageHeader from '@/components/page-header.vue';
