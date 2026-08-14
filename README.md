@@ -45,8 +45,8 @@
 
 ### 环境要求
 
-- Node.js >= 24
-- pnpm 10.34.5
+- Node.js 26.7.0
+- pnpm 11.21.0
 
 ### 安装依赖
 
@@ -76,9 +76,10 @@ pnpm build:gh
 hanekawa-tools-vue/
 ├── env/                  # 多环境配置
 ├── src/
-│   ├── api/              # API 接口层
+│   ├── assets/            # 静态资源
+│   ├── api/               # API 接口层
 │   ├── components/       # 公共组件 + shadcn-vue
-│   │   ├── icon.vue      # 图标封装组件（34 个图标）
+│   │   ├── icon.vue      # 图标封装组件（按需注册）
 │   │   ├── month-picker.vue  # 月份选择器
 │   │   └── ...           # mode-toggle / nav-main / page-header / theme-provider 等
 │   ├── composables/      # Vue 组合式函数
@@ -101,8 +102,9 @@ hanekawa-tools-vue/
 ### 新增工具页面
 
 1. 在 `src/pages/` 下创建 `.vue` 文件
-2. 在 `src/router/config.ts` 的 `pageMeta` 中添加标题、图标等配置
-3. 在 `src/router/config.ts` 的 `routeConfig` 中添加路由定义
+2. 在 `src/router/config.ts` 的 `toolPages` 数组中添加一项（`path` / `title` / `description` / `icon` / `component`）
+
+`toolPages` 为单一数据源，路由、侧边栏菜单、首页工具卡片会自动生成，无需额外配置。
 
 ### 添加新图标
 
