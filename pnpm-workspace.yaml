@@ -2,7 +2,8 @@ nodeDownloadMirrors:
   release: https://npmmirror.com/mirrors/node/
 
 minimumReleaseAgeExclude:
-  - dayjs@1.11.22
+  - dayjs@1.11.22 || 1.11.23
+  - eslint-plugin-tailwindcss@4.3.0
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
@@ -15,4 +16,3 @@ allowBuilds:
 
 overrides:
   '@trickfilm400/rollup-plugin-off-main-thread': 4.0.0-pre2
-
