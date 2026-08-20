@@ -4,6 +4,7 @@ nodeDownloadMirrors:
 minimumReleaseAgeExclude:
   - dayjs@1.11.22 || 1.11.23
   - eslint-plugin-tailwindcss@4.3.0
+  - vite@8.2.2
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
