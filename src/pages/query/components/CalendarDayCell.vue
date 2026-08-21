@@ -37,7 +37,7 @@ const handleSelect = (cell: CalendarCell, year: number, month: number) => {
         ? 'text-red-500 dark:text-red-400'
         : '',
       !cell.isSelected && !cell.isHoliday && cell.solarTerm
-        ? 'text-green-600 dark:text-green-400'
+        ? 'bg-green-100/60 text-green-600 dark:bg-green-950/30 dark:text-green-400'
         : '',
     ]"
     @click="handleSelect(cell, year, month)"
