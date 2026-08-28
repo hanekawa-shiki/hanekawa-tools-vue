@@ -48,8 +48,8 @@ importers:
         specifier: 1.17.1
         version: 1.17.1
       reka-ui:
-        specifier: 2.10.3
-        version: 2.10.3(vue@3.5.41(typescript@6.0.3))
+        specifier: 2.10.4
+        version: 2.10.4(vue@3.5.41(typescript@6.0.3))
       tailwind-merge:
         specifier: 3.6.0
         version: 3.6.0
@@ -2496,6 +2496,7 @@ packages:
   glob@11.1.0:
     resolution: {integrity: sha512-vuNwKSaKiqm7g0THUBu2x7ckSs3XJLXE+2ssL7/MfTGPLLcrJQ/4Uq1CjPTtO5cCIiRxqvN6Twy1qOwhL0Xjcw==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   globals@15.15.0:
@@ -3561,8 +3562,8 @@ packages:
     resolution: {integrity: sha512-NgRBy2Nx/bE+9F27nVHnqcN5HjyLmecqsqx2PJHu3/IEtADD4WuxuXIVExD5PoSDFVrl78dOonfcOe5O+5nbzQ==}
     hasBin: true
 
-  reka-ui@2.10.3:
-    resolution: {integrity: sha512-nJGZbwcha8AcP2wbnjodfzsciTKBqp1mIzepC9Pi2xDI/YK3++ej3vpJOSPyxqrkq1Oorj4K+BdJkbVCV6x6ag==}
+  reka-ui@2.10.4:
+    resolution: {integrity: sha512-kbS5GAbkHkYj0EVKAg5ZPEPndhBjeUFSa1Aq5m5ftQwyHnB1v5tw8X6fcwfKH/ry3StPXblMWM1DW82MVS71cw==}
     peerDependencies:
       vue: '>= 3.4.0'
 
@@ -7743,7 +7744,7 @@ snapshots:
     dependencies:
       jsesc: 3.1.0
 
-  reka-ui@2.10.3(vue@3.5.41(typescript@6.0.3)):
+  reka-ui@2.10.4(vue@3.5.41(typescript@6.0.3)):
     dependencies:
       '@floating-ui/dom': 1.8.0
       '@floating-ui/vue': 1.1.11(vue@3.5.41(typescript@6.0.3))
