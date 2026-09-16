@@ -8,6 +8,10 @@ minimumReleaseAgeExclude:
   - '@hugeicons/core-free-icons@4.3.0'
   - '@hugeicons/vue@1.0.8'
   - '@types/node@26.5.0'
+  - '@vueuse/core@15.0.0'
+  - '@vueuse/metadata@15.0.0'
+  - '@vueuse/shared@15.0.0'
+  - prettier@3.9.7
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
