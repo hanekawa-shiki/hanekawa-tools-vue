@@ -52,7 +52,7 @@
   "devDependencies": {
     "@antfu/eslint-config": "9.5.1",
     "@tailwindcss/vite": "4.3.3",
-    "@types/node": "26.5.0",
+    "@types/node": "26.5.1",
     "@types/parse-torrent": "11.0.1",
     "@vitejs/plugin-vue": "6.0.9",
     "eslint": "10.10.0",
