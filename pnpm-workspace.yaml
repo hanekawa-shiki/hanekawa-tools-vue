@@ -11,7 +11,7 @@ minimumReleaseAgeExclude:
   - '@vueuse/core@15.0.0'
   - '@vueuse/metadata@15.0.0'
   - '@vueuse/shared@15.0.0'
-  - prettier@3.9.7
+  - prettier@3.9.7 || 3.9.8
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
