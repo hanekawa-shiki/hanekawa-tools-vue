@@ -31,7 +31,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@hugeicons/core-free-icons": "4.3.3",
+    "@hugeicons/core-free-icons": "4.3.4",
     "@hugeicons/vue": "1.0.8",
     "@vueuse/core": "15.0.0",
     "axios": "1.20.0",
@@ -52,10 +52,10 @@
   "devDependencies": {
     "@antfu/eslint-config": "9.5.1",
     "@tailwindcss/vite": "4.3.3",
-    "@types/node": "26.5.0",
+    "@types/node": "26.6.2",
     "@types/parse-torrent": "11.0.1",
     "@vitejs/plugin-vue": "6.0.9",
-    "eslint": "10.10.0",
+    "eslint": "10.11.0",
     "eslint-plugin-format": "2.0.1",
     "eslint-plugin-tailwindcss": "4.4.0",
     "husky": "9.1.7",
