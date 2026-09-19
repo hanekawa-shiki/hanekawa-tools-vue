@@ -31,7 +31,7 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@hugeicons/core-free-icons": "4.3.4",
+    "@hugeicons/core-free-icons": "4.3.3",
     "@hugeicons/vue": "1.0.8",
     "@vueuse/core": "15.0.0",
     "axios": "1.20.0",

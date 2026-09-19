@@ -1,18 +1,6 @@
 nodeDownloadMirrors:
   release: https://npmmirror.com/mirrors/node/
 
-minimumReleaseAgeExclude:
-  - dayjs@1.11.22 || 1.11.23
-  - eslint-plugin-tailwindcss@4.3.0
-  - vite@8.2.2
-  - '@hugeicons/vue@1.0.8'
-  - '@types/node@26.5.0 || 26.6.2'
-  - '@vueuse/core@15.0.0'
-  - '@vueuse/metadata@15.0.0'
-  - '@vueuse/shared@15.0.0'
-  - prettier@3.9.7 || 3.9.8
-  - eslint@10.11.0
-  - '@hugeicons/core-free-icons@4.3.4'
 shellEmulator: true
 trustPolicy: no-downgrade
 trustPolicyExclude:
@@ -25,3 +13,6 @@ allowBuilds:
 
 overrides:
   '@trickfilm400/rollup-plugin-off-main-thread': 4.0.0-pre2
+minimumReleaseAgeExclude:
+  - '@types/node@26.6.2'
+  - eslint@10.11.0
