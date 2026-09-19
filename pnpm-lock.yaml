@@ -255,8 +255,8 @@ importers:
         specifier: 1.7.0
         version: 1.7.0
       node:
-        specifier: runtime:26.7.0
-        version: runtime:26.7.0
+        specifier: runtime:24.21.0
+        version: runtime:24.21.0
       prettier:
         specifier: 3.9.8
         version: 3.9.8
@@ -1644,9 +1644,6 @@ packages:
 
   '@types/ms@2.1.0':
     resolution: {integrity: sha512-GsCCIZDE/p3i96vtEqx+7dBUGXrc7zeSK3wwPHIaRThS+9OhWIXRqzs4d6k1SVU8g91DrNRWxWUGhp5KXQb2VA==}
-
-  '@types/node@26.6.1':
-    resolution: {integrity: sha512-VqGJBMCtdhqkBUCcBLvywI0NJ+KLuVzgNnlBUNFOQjqVxzo2lxLUNg1DSey8+u2u6ktswSAxg+s68QLzWHNOuA==}
 
   '@types/node@26.6.2':
     resolution: {integrity: sha512-X1P21scMv4zGKLYqjdGjaKa7COa0RKVYYZZN/NfvLQ1JegxFhdhpZG/Lyn8AXx6CDUavKAd11v6BvfpkDByK8g==}
@@ -3336,7 +3333,7 @@ packages:
     resolution: {integrity: sha512-X75ZN8DCLftGM5iKwoYLA3rjnrAEs97MkzvSd4q2746Tgpg8b8XWiBGiBG4ZpgcAqBgtgPHTiAc8ZMCvZuikDw==}
     engines: {node: '>=10'}
 
-  node@runtime:26.7.0:
+  node@runtime:24.21.0:
     resolution:
       type: variations
       variants:
@@ -3344,9 +3341,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-aiblNEH7fhCX+gsZYWAAoDCpuWFW6xWg/iJoLP3xmtI=
+            integrity: sha256-rseyRkr7mfB4wZywbSAdVDvTsxHLoHEoK84bF8l+WLs=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-aix-ppc64.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-aix-ppc64.tar.gz
           targets:
             - cpu: ppc64
               os: aix
@@ -3354,9 +3351,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-fuZZp3aOZBu/1TYJQGYLjo/QBS93SI82VWK6xSL8FdQ=
+            integrity: sha256-vtfupTJeEQjzLOUijd1qXw8IpJnuQqp0Qq6lg3AvYFc=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-darwin-arm64.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-darwin-arm64.tar.gz
           targets:
             - cpu: arm64
               os: darwin
@@ -3364,9 +3361,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-8nnR7SjOV/d4i/I0NdKtf910OJBK1cTYoQgafN49S5Y=
+            integrity: sha256-FGLLOzBGuBXPjqQ209pFDsGp8R2sflpGsK2lMF1+gJc=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-darwin-x64.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-darwin-x64.tar.gz
           targets:
             - cpu: x64
               os: darwin
@@ -3374,9 +3371,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-klqmFX3TdULQ1/Lii3v2Hns5KEQRIQsEmLw3iNtK72g=
+            integrity: sha256-ckKCw7Q67JmKqVJzgEZbRdIp4CG1gDX19PYwleq/5dU=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-linux-arm64.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-linux-arm64.tar.gz
           targets:
             - cpu: arm64
               os: linux
@@ -3384,9 +3381,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-tB38aBaeIOVNeeCwRD0Kz1tlJTWkAQoyWNbdsdEY2RQ=
+            integrity: sha256-UcXVMGbukpILYXg7A7Buy5nzZhFg97Fcp36EdBFaZ7w=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-linux-ppc64le.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-linux-ppc64le.tar.gz
           targets:
             - cpu: ppc64le
               os: linux
@@ -3394,9 +3391,9 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-wzXjp4/3I/NsF5KTkNG9QAPyZ777oSySdkrL9qNyZ+4=
+            integrity: sha256-Xy+jdCLgx13jXBaG/lHXgyTywqj+LMI5pB2cAAop2Tg=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-linux-s390x.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-linux-s390x.tar.gz
           targets:
             - cpu: s390x
               os: linux
@@ -3404,9 +3401,20 @@ packages:
             archive: tarball
             bin:
               node: bin/node
-            integrity: sha256-vWtsMeN3utmtV5vtcuW8EfTIeayUUq1R0w5kbqPYKN8=
+            integrity: sha256-PWNAX8ZaDS0pdsHwvC/Se7C9ByEkaecFqsPwOuWrTJw=
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-linux-x64.tar.gz
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-linux-x64-musl.tar.gz
+          targets:
+            - cpu: x64
+              os: linux
+              libc: musl
+        - resolution:
+            archive: tarball
+            bin:
+              node: bin/node
+            integrity: sha256-bh24fvWLiBnl1UAu/xU2SRsY7djre+5e94l4duiNxf8=
+            type: binary
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-linux-x64.tar.gz
           targets:
             - cpu: x64
               os: linux
@@ -3414,10 +3422,10 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-vod1IEz87KWnPDD5G/DeXoUnTAG3dtwT8WuRqiUeuwE=
-            prefix: node-v26.7.0-win-arm64
+            integrity: sha256-h3mxveHTn41CDjtXqmV7OYka9DTT3kSpGQRM7AZ4WSE=
+            prefix: node-v24.21.0-win-arm64
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-win-arm64.zip
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-win-arm64.zip
           targets:
             - cpu: arm64
               os: win32
@@ -3425,14 +3433,14 @@ packages:
             archive: zip
             bin:
               node: node.exe
-            integrity: sha256-071ydVFB7TK7zYQSKO6BiXyKmNUN+n2uIXk5mgp8kPg=
-            prefix: node-v26.7.0-win-x64
+            integrity: sha256-FY92hbRN5R9sDfHRU1JsvNPhvHOajfxgdyHO913p5UE=
+            prefix: node-v24.21.0-win-x64
             type: binary
-            url: https://npmmirror.com/mirrors/node/v26.7.0/node-v26.7.0-win-x64.zip
+            url: https://npmmirror.com/mirrors/node/v24.21.0/node-v24.21.0-win-x64.zip
           targets:
             - cpu: x64
               os: win32
-    version: 26.7.0
+    version: 24.21.0
     hasBin: true
 
   nostics@1.2.0:
@@ -5692,10 +5700,6 @@ snapshots:
 
   '@types/ms@2.1.0': {}
 
-  '@types/node@26.6.1':
-    dependencies:
-      undici-types: 8.9.0
-
   '@types/node@26.6.2':
     dependencies:
       undici-types: 8.9.0
@@ -5703,7 +5707,7 @@ snapshots:
   '@types/parse-torrent@11.0.1':
     dependencies:
       '@types/magnet-uri': 7.0.0
-      '@types/node': 26.6.1
+      '@types/node': 26.6.2
 
   '@types/resolve@1.20.2': {}
 
@@ -7067,7 +7071,7 @@ snapshots:
   jsdoc-type-pratt-parser@9.2.2:
     dependencies:
       '@types/estree': 1.0.9
-      '@types/node': 26.6.1
+      '@types/node': 26.6.2
 
   jsesc@3.1.0: {}
 
@@ -7685,7 +7689,7 @@ snapshots:
       util: 0.12.5
       vm-browserify: 1.1.2
 
-  node@runtime:26.7.0: {}
+  node@runtime:24.21.0: {}
 
   nostics@1.2.0: {}
 
