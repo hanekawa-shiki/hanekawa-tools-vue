@@ -170,8 +170,8 @@ importers:
   .:
     dependencies:
       '@hugeicons/core-free-icons':
-        specifier: 4.3.3
-        version: 4.3.3
+        specifier: 4.3.4
+        version: 4.3.4
       '@hugeicons/vue':
         specifier: 1.0.8
         version: 1.0.8(vue@3.5.43(typescript@6.0.3))
@@ -988,8 +988,8 @@ packages:
   '@floating-ui/vue@1.1.11':
     resolution: {integrity: sha512-HzHKCNVxnGS35r9fCHBc3+uCnjw9IWIlCPL683cGgM9Kgj2BiAl8x1mS7vtvP6F9S/e/q4O6MApwSHj8hNLGfw==}
 
-  '@hugeicons/core-free-icons@4.3.3':
-    resolution: {integrity: sha512-rpCPwJXhIjEKhMYb2AbNU6nS1HD2vXjeT65LL8SOaEHoN0cI57UTgnroU8q/TlocQQfnxeGz9C3KiyIausfzxg==}
+  '@hugeicons/core-free-icons@4.3.4':
+    resolution: {integrity: sha512-TMbzqGFD4XnEyVYut4sTzT7Wpq+Mghe7ChGd+R3bkyhJc31tcsfxtX8gmgrV3zIqn5dumsNJhvsX+h3OPjLMGQ==}
 
   '@hugeicons/vue@1.0.8':
     resolution: {integrity: sha512-T1fNH9/+0QntvNsWJRpWj9AlSXpHkHPNdf35/UWcVWQpPzm2BbH1heW2pSIKRka6NoXSte2vzNRJmmriRPfxIQ==}
@@ -2682,6 +2682,7 @@ packages:
   glob@11.1.0:
     resolution: {integrity: sha512-vuNwKSaKiqm7g0THUBu2x7ckSs3XJLXE+2ssL7/MfTGPLLcrJQ/4Uq1CjPTtO5cCIiRxqvN6Twy1qOwhL0Xjcw==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   globals@15.15.0:
@@ -5267,7 +5268,7 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@hugeicons/core-free-icons@4.3.3': {}
+  '@hugeicons/core-free-icons@4.3.4': {}
 
   '@hugeicons/vue@1.0.8(vue@3.5.43(typescript@6.0.3))':
     dependencies:
