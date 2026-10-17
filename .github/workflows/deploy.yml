@@ -18,7 +18,7 @@ jobs:
 
       # 关键改动：用 setup-vp 替代 pnpm/action-setup + setup-node + pnpm install
       - name: Setup Vite+
-        uses: voidzero-dev/setup-vp@1.21.2 # 请替换为具体的 release 版本或 commit SHA
+        uses: voidzero-dev/setup-vp@v1.21.2 # 请替换为具体的 release 版本或 commit SHA
         with:
           node-version: '24' # 对应你原来的 24.x
           cache: true # 自动处理 pnpm 依赖缓存
