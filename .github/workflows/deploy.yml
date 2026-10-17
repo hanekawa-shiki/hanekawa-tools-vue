@@ -24,7 +24,7 @@ jobs:
           cache: true # 自动处理 pnpm 依赖缓存
 
       - name: Building for GH
-        run: vp build
+        run: vp run build:cf
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
