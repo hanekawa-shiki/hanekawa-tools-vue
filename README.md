@@ -1,6 +1,5 @@
 # Hanekawa Tools Vue
 
-[![code style](https://antfu.me/badge-code-style.svg)](https://github.com/antfu/eslint-config)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 > 我不是无所不知，只是刚好知道而已。
